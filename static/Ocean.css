@@ -1,0 +1,89 @@
+/* Reset some default styles */
+body, h1, p, button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    font-family: Arial, sans-serif;
+}
+
+/* Style the header */
+header {
+    background-color: #0077cc;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Style the main container */
+main {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Style the ocean background */
+.ocean-background {
+    background-image: url('ocean.jpg'); /* Replace 'ocean.jpg' with your background image URL */
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 500px;
+    position: relative;
+}
+
+/* Style the button container */
+.button-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+button {
+    background-color: #0077cc;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Style the message display and dropped bottles history */
+.message-display,
+.dropped-bottles-history {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+}
+
+/* Style the "Done" button within the message display */
+#done-button {
+    background-color: #00cc77;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#done-button:hover {
+    background-color: #009955;
+}
+
+/* Style the dropped bottles history */
+.dropped-bottles-history {
+    display: none; /* Initially hidden */
+    max-height: 300px;
+    overflow-y: auto;
+}

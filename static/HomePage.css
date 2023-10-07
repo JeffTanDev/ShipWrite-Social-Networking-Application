@@ -1,0 +1,70 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+}
+
+h1 {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #0077cc;
+    color: white;
+    margin: 0;
+}
+
+.toolbar {
+    background-color: #0077cc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.toolbar button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+    transition: background-color 0.3s;
+}
+
+.toolbar button:hover {
+    background-color: #0055aa;
+}
+
+.toolbar .profile-button {
+    text-decoration: none;
+    color: white;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button-container button {
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: background-color 0.3s;
+}
+
+.button-container button:hover {
+    background-color: #0055aa;
+}
+
+/* Inward mode styles */
+.inward-mode .button-container .message-button,
+.inward-mode .button-container .group-button {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
