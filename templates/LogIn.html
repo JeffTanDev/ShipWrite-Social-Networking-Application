@@ -1,23 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<!-- your other HTML head elements -->
 </head>
 <body>
     <h1>Login</h1>
     <hr>
-    <form action="">
-        Email: <input type="text" name="" id="" placeholder="123@gmail.com">
+    <form id="login-form">
+        Email: <input type="text" name="username" id="username" placeholder="123@gmail.com">
         <br>
-        Password: <input type="password" name="" id="">
+        Password: <input type="password" name="password" id="password">
         <hr>
-        <button><a href="./HomePage.html">Login</a></button>
-        <button type="reset">reset</button>
+        <!-- ... Your login form inputs ... -->
+        <button type="button" id="login-button">Login</button>
+        <button type="reset">Reset</button>
         <br>
         <button><a href="./CreateUser.html">Create account</a></button>
     </form>
 
+    <!-- Include the Axios library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        // Handle the login button click event
+        document.getElementById("login-button").addEventListener("click", function() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Create a data object to send to the server
+            const data = {
+                username: username,
+                password: password
+            };
+
+            // Send a POST request to the Flask server
+            axios.post('/api/login', data)
+                .then(function(response) {
+                    if (response.data.access_token) {
+                        // Redirect to the homepage on success
+                        window.location.href = '/homepage';
+                    } else {
+                        alert(response.data.message); // Display an error message on failure
+                    }
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
+        });
+    </script>
 </body>
 </html>
