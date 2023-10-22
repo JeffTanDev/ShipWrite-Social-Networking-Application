@@ -30,7 +30,7 @@ def login():
         access_token = f"Bearer Token for {username}"
         response = {
             "access_token": access_token,
-            "message": "登录成功"
+            "message": "Login success"
         }
         return jsonify(response), 200
     else:
