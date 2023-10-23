@@ -28,6 +28,11 @@ def create_user(name=None):
 def profile(name=None):
     return render_template('Profile.html', name=name)
 
+@app.route('/edition')
+# Opens the edition page
+def edition(name=None):
+    return render_template('Edition.html', name=name)
+
 @app.route('/ocean')
 # Opens the ocean page
 def ocean(name=None):
@@ -38,9 +43,10 @@ def ocean(name=None):
 
 # Mock user data (replace this with a proper authentication system)
 users = {
-    "user1": "12345",
-    "123": "123"
+    "user1": {"password": "12345"},
+    "123": {"password": "123"}
 }
+
 
 # Route to handle the login API (similar to the previous example)
 @app.route('/api/login', methods=['POST'])
@@ -49,7 +55,7 @@ def login():
     username = data.get('username', '')
     password = data.get('password', '')
 
-    if username in users and users[username] == password:
+    if username in users and users[username]['password'] == password:
         access_token = f"Bearer Token for {username}"
         response = {
             "access_token": access_token,
@@ -67,6 +73,10 @@ def create_account():
     data = request.get_json()
     username = data.get('username', '')
     password = data.get('password', '')
+    firstname = data.get('firstname', '')
+    lastname = data.get('lastname', '')
+    email = data.get('email', '')
+    phone = data.get('phone', '')
 
     # Check if the username or password is missing
     if not username or not password:
@@ -77,7 +87,13 @@ def create_account():
         return jsonify({"error": "repeat username"}), 400
 
     # Create the new user account
-    users[username] = password
+    users[username] = {
+        'password': password,
+        'firstname': firstname,
+        'lastname': lastname,
+        'email': email,
+        'phone': phone
+    }
     print(users)
 
     return jsonify({"message": "Account created successfully"}), 200

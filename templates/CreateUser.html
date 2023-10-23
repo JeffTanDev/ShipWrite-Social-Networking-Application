@@ -8,10 +8,19 @@
 <body>
     <h1>Create Account</h1>
     <hr>
+    Text boxs with an asterisk are required. Others are optional.
     <form id="create-account-form">
-        Username: <input type="text" name="username" id="username" placeholder="Enter your username">
+        Username*: <input type="text" name="username" id="username" placeholder="Enter your username">
         <br>
-        Password: <input type="password" name="password" id="password">
+        Password*: <input type="password" name="password" id="password">
+        <hr>
+        First name: <input type="text" name="First" id="First">
+        <hr>
+        Last name: <input type="text" name="Last" id="Last">
+        <hr>
+        Email: <input type="text" name="Email" id="Email">
+        <hr>
+        Phone: <input type="text" name="Phone" id="Phone">
         <hr>
         <button type="button" id="create-button">Create</button>
         <button type="reset">Reset</button>
@@ -25,13 +34,21 @@
         document.getElementById("create-button").addEventListener("click", function() {
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
+            const first = document.getElementById("First").value;
+            const last = document.getElementById("Last").value;
+            const email = document.getElementById("Email").value;
+            const phone = document.getElementById("Phone").value;
 
             axios({
                 url: '/api/newaccount',
                 method: 'POST',
                 data: {
                     username: username,
-                    password: password
+                    password: password,
+                    firstname: first,
+                    lastname: last,
+                    email: email,
+                    phone: phone
                 }
             }).then(result => {
                 alert(result.data.message); // Show success message
