@@ -3,18 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Create Account</title>
 </head>
 <body>
     <h1>Create Account</h1>
     <hr>
-    <form action="">
-        Email: <input type="text" name="" id="" placeholder="123@gmail.com">
+    <form id="create-account-form">
+        Username: <input type="text" name="username" id="username" placeholder="Enter your username">
         <br>
-        Password: <input type="password" name="" id="">
+        Password: <input type="password" name="password" id="password">
         <hr>
-        <button><a href="./LogIn.html">Create</a></button>
-        <button type="reset">reset</button>
+        <button type="button" id="create-button">Create</button>
+        <button type="reset">Reset</button>
     </form>
+
+    <!-- Include the Axios library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        // Handle the create button click event
+        document.getElementById("create-button").addEventListener("click", function() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            axios({
+                url: '/api/newaccount',
+                method: 'POST',
+                data: {
+                    username: username,
+                    password: password
+                }
+            }).then(result => {
+                alert(result.data.message); // Show success message
+                window.location.href = '/';
+            }).catch(error => {
+                alert(error.response.data.error); // Show error message
+            });
+        });
+    </script>
 </body>
 </html>

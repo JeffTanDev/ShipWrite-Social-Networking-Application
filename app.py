@@ -13,10 +13,33 @@ app = Flask(__name__)
 def root():
     return render_template('LogIn.html')
 
+@app.route('/homepage')
+# Opens the home page
+def home_page(name=None):
+    return render_template('HomePage.html', name=name)
+
+@app.route('/createuser')
+# Opens the CreateUser page
+def create_user(name=None):
+    return render_template('CreateUser.html', name=name)
+
+@app.route('/profile')
+# Opens the Profile page
+def profile(name=None):
+    return render_template('Profile.html', name=name)
+
+@app.route('/ocean')
+# Opens the ocean page
+def ocean(name=None):
+    return render_template('Ocean.html', name=name)
+
+
+
+
 # Mock user data (replace this with a proper authentication system)
 users = {
-    "user1": "password1",
-    "user2": "password2"
+    "user1": "12345",
+    "123": "123"
 }
 
 # Route to handle the login API (similar to the previous example)
@@ -38,41 +61,27 @@ def login():
         return jsonify(response), 400
 
 
-@app.route('/create_user', methods=('GET', 'POST'))
-# Opens the create user page 
-def create_user(name=None):
-    # Works functionally the same to login but will perform different
-    # checks on the given username and password
-    if request.method == 'POST':
-        # If receiving a post from the frontend, store username and password data
-        username = request.form['username']
-        password = request.form['password']
-        # database not connected
-        # db = get_db()
-        error = None
+# Route to handle the creation of a new account
+@app.route('/api/newaccount', methods=['POST'])
+def create_account():
+    data = request.get_json()
+    username = data.get('username', '')
+    password = data.get('password', '')
 
-        # If username or password field is not filled, return an error
-        if not username:
-            error = 'Username is required.'
-        elif not password:
-            error = 'Password is required.'
+    # Check if the username or password is missing
+    if not username or not password:
+        return jsonify({"error": "Miss username or password"}), 400
 
-        if error is None:
-            # Here is where we send the info to the data base to see if the user exists
-            # If username is not taken, store data in database and redirect to login
-            # if username is taken, raise error and reprompt
-            return redirect(url_for(login))
+    # Check if the username already exists
+    if username in users:
+        return jsonify({"error": "repeat username"}), 400
 
-        flash(error)
+    # Create the new user account
+    users[username] = password
+    print(users)
 
-    return render_template('CreateUser.html', name=name)
+    return jsonify({"message": "Account created successfully"}), 200
 
-
-@app.route('/homepage', methods=('GET', 'POST'))
-# Opens the home page 
-def home_page(name=None):
-    # This logic will be more complicated
-    return render_template('HomePage.html', name=name)
 
 
 if __name__ == '__main__':

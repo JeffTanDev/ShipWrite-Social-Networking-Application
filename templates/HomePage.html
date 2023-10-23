@@ -10,13 +10,21 @@
     <h1>Home Page</h1>
     <div class="toolbar">
         <button id="mode-button">Mode</button>
-        <a href="./Profile.html" class="profile-button">Profile</a>
+        <button class="profile-button" id="profile-b">Profile</button>
     </div>
     <div class="button-container">
         <button class="message-button">Message</button>
-        <a href="./Ocean.html"><button>Ocean</button></a>
+        <button id="ocean-button">Ocean</button>
         <a href="./Team.html"><button class="group-button">Group</button></a>
     </div>
     <script src="../static/HomePage.js"></script>
+    <script>
+         document.getElementById("profile-b").addEventListener("click", function() {
+            window.location.href = '/profile';
+         })
+         document.getElementById("ocean-button").addEventListener("click", function() {
+            window.location.href = '/ocean';
+         })
+    </script>
 </body>
 </html>

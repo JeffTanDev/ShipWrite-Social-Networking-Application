@@ -12,7 +12,7 @@
         <button type="button" id="login-button">Login</button>
         <button type="reset">Reset</button>
         <br>
-        <button><a href="./CreateUser.html">Create account</a></button>
+        <button type="button" id="create-user">Create account</a></button>
     </form>
 
     <!-- Include the Axios library -->
@@ -24,25 +24,24 @@
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
 
-            // Create a data object to send to the server
-            const data = {
-                username: username,
-                password: password
-            };
+            axios({
+                url:'/api/login',
+                method:'POST',
+                data:{
+                    username:username,
+                    password:password
+                }
+            }).then(result=>{
+                console.log(result);
+                window.location.href = '/homepage';
+            }).catch(error=>{
+                console.log(error);
+                alert(error.response.data.error);
+            })
+        });
 
-            // Send a POST request to the Flask server
-            axios.post('/api/login', data)
-                .then(function(response) {
-                    if (response.data.access_token) {
-                        // Redirect to the homepage on success
-                        window.location.href = '/homepage';
-                    } else {
-                        alert(response.data.message); // Display an error message on failure
-                    }
-                })
-                .catch(function(error) {
-                    console.error(error);
-                });
+        document.getElementById("create-user").addEventListener("click", function() {
+            window.location.href = '/createuser';
         });
     </script>
 </body>
