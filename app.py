@@ -55,9 +55,6 @@ def login():
     username = data.get('username', '')
     password = data.get('password', '')
 
-    print(type(username))
-    print(type(password))
-
     if username in users and users[username]['password'] == password:
         access_token = f"Bearer Token for {username}"
         response = {
@@ -70,20 +67,32 @@ def login():
         return jsonify(response), 400
 
 
-
+# Route to handle the change password API
 @app.route('/api/changepassword', methods=['POST'])
 def change_password():
     data=request.get_json()
     username = data.get('username', '')
     email = data.get('email', '')
     password = data.get('password', '')
+    passwordcheck = data.get('passwordcheck', '')
     if username in users and users[username]['email'] == email:
-        access_token = f"Changepassword Token for {username}"
-        response = {
-            "access_token": access_token,
-            "message": "Email been verified"
-        }
-        return jsonify(response), 200
+        if (password == passwordcheck) and (not(users[username]['password'] == password)):
+            users[username]['password'] = password
+            access_token = f"Bearer Token for {username}"
+            response = {
+                "access_token": access_token,
+                "message": "Change success"
+                }
+            return jsonify(response), 200
+        elif (users[username]['password'] == password):
+            response = {"error": "password is the same with the used one"}
+            return jsonify(response), 400
+        else:
+            response = {"error": "Two new passwod need be the same!"}
+            return jsonify(response), 400
+    else:
+        response = {"error": "Username does not match with this email"}
+        return jsonify(response), 400
 
 
 # Route to handle the creation of a new account
