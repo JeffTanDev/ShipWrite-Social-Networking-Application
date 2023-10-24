@@ -51,11 +51,10 @@ users = {
 # Route to handle the login API (similar to the previous example)
 @app.route('/api/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    username = data.get('username', '')
-    password = data.get('password', '')
+    username = request.form('username', '')
+    password = request.form('password', '')
 
-    if username in users and users[username]['password'] == password:
+    if username in users and users['password'] == password:
         access_token = f"Bearer Token for {username}"
         response = {
             "access_token": access_token,
@@ -65,6 +64,28 @@ def login():
     else:
         response = {"error": "Username or password incorrect"}
         return jsonify(response), 400
+
+@app.route('/api/changepassword', methods=['POST'])
+def change_password():
+    username = data.get('username', '')
+    email = data.get('email', '')
+    password = data.get('password', '')
+    if username in users and user[username]['email'] == email:
+        access_token = f"Changepassword Token for {username}"
+        response = {
+            "access_token": access_token,
+            "message": "Email been verified"
+        }
+        
+
+        return jsonify(response), 200
+    else:
+        response = {"error": "username does not match with the email"}
+        return jsonify(response), 400
+
+
+
+
 
 
 # Route to handle the creation of a new account
