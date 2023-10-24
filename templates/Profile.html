@@ -1,24 +1,44 @@
+<!-- profile.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Profile</title>
 </head>
 <body>
     <h1>Profile</h1>
     <hr>
-    Email:
+    Email: 
     <br>
-    Gender:
+    First name: 
     <br>
-    Character:
+    Last name: 
     <br>
-    <button id="setting">setting</button>
+    Phone: 
+    <br>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-         document.getElementById("setting").addEventListener("click", function() {
-            window.location.href = '/edition';
-         })
+        // Axios interceptor to attach the JWT to every request
+        // console.log("Setting up interceptors...");
+        // axios.interceptors.request.use(function (config) {
+        //     const token = localStorage.getItem('access_token');
+        //     console.log("Interceptor triggered with token:", token);
+        //     if (token) {
+        //         config.headers.Authorization = 'Bearer ' + token;
+        //     }
+        //     return config;
+        // }, function (error) {
+        //     return Promise.reject(error);
+        // });
+
+
+        // Example to fetch some user-specific data using JWT (if you have such an endpoint)
+        // axios.get('/api/some_user_data').then(response => {
+        //     console.log(response.data);
+        // });
+
     </script>
 </body>
 </html>

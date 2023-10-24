@@ -1,10 +1,15 @@
-<!-- your other HTML head elements -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
 </head>
 <body>
     <h1>Login</h1>
     <hr>
     <form id="login-form">
-        User: <input type="text" name="username" id="username" placeholder="Juan_CS422">
+        Username: <input type="text" name="username" id="username" placeholder="Juan_CS422">
         <br>
         Password: <input type="password" name="password" id="password">
         <hr>
@@ -25,19 +30,21 @@
             const password = document.getElementById("password").value;
 
             axios({
-                url:'/api/login',
-                method:'POST',
-                data:{
-                    username:username,
-                    password:password
+                url: '/api/login',
+                method: 'POST',
+                data: {
+                    username: username,
+                    password: password
                 }
-            }).then(result=>{
-                console.log(result);
-                window.location.href = '/homepage';
-            }).catch(error=>{
-                console.log(error);
-                alert(error.response.data.error);
-            })
+            }).then(result => {
+                // Store the access_token in the localStorage
+                //localStorage.setItem('access_token', result.data.access_token);
+                // console.log("Stored token:", result.data.access_token);  // Log the stored token
+                // window.location.href = `/profile/${username}`;
+                window.location.href = `/homepage`;
+            }).catch(error => {
+                alert("Login failed.");
+            });
         });
 
         document.getElementById("create-user").addEventListener("click", function() {
@@ -46,3 +53,4 @@
     </script>
 </body>
 </html>
+
