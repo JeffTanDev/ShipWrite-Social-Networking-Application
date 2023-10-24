@@ -1,0 +1,9 @@
+bcrypt
+flask_jwt_extended
+sql
+sql.connector
+flask
+uuid
+datetime
+pyjwt
+python-decouple
