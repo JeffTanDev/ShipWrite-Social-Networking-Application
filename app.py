@@ -67,25 +67,17 @@ def login():
 
 @app.route('/api/changepassword', methods=['POST'])
 def change_password():
+    data=request.get_json()
     username = data.get('username', '')
     email = data.get('email', '')
     password = data.get('password', '')
-    if username in users and user[username]['email'] == email:
+    if username in users and users[username]['email'] == email:
         access_token = f"Changepassword Token for {username}"
         response = {
             "access_token": access_token,
             "message": "Email been verified"
         }
-        
-
         return jsonify(response), 200
-    else:
-        response = {"error": "username does not match with the email"}
-        return jsonify(response), 400
-
-
-
-
 
 
 # Route to handle the creation of a new account
@@ -118,6 +110,31 @@ def create_account():
     print(users)
 
     return jsonify({"message": "Account created successfully"}), 200
+
+@app.route('/api/userinfo', methods=['GET'])
+def get_user_info():
+    #Will replace with actual connection to database 
+    data = request.get_json()
+    username = data.get('username', '')
+    password = data.get('password', '')
+    firstname = data.get('firstname', '')
+    lastname = data.get('lastname', '')
+    email = data.get('email', '')
+    phone = data.get('phone', '')
+
+    if not username:
+        #If username is not in database, return a user not found error
+        response = ({"error": "Username not found"})
+        return jsonify(response), 404
+    
+    else:
+        return jsonify({"message": "Success"}), 200
+    #Check if user token is active, if not return unautorized error
+    '''
+    if not access_token:
+        response({"error": "User Timed Out. Login Required})
+        return jsonify(response), 
+    '''
 
 
 
