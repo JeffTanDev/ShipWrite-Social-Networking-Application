@@ -11,7 +11,7 @@ class DataBase:
     def __init__(self) -> None:
         self.connection_pool = self._create_connection_pool()
 
-    # Creates pool, TODO move credentials to a more secure method
+    # Creates pool
     def _create_connection_pool(self):
         db_config = {"user": config('DB_USER'),
                      "password": config('DB_PASSWORD'),
@@ -63,7 +63,7 @@ class DataBase:
         finally:
             connection.close()
 
-    def select_from_db(self, table_name: str, data: dict) -> bool:
+    def select_from_db(self, table_name: str, data: dict) -> list:
         """
         Retrieve data from a specified database table using a SELECT query.
 

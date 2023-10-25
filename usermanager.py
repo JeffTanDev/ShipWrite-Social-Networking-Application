@@ -12,7 +12,7 @@ class UserManager():
         database: An instance of the database connection manager (DataBase) for interacting with the database.
 
     Attributes:
-        database: The da  tabase connection manager used for user-related database operations.
+        database: The database connection manager used for user-related database operations.
     """
 
     def __init__(self, database) -> None:
