@@ -7,28 +7,83 @@
     <title>Ocean Drift Bottles</title>
 </head>
 <body>
-    <header>
-        <h1>Ocean Drift Bottles</h1>
-    </header>
-    <main>
-        <div class="ocean-background">
-            <!-- Buttons -->
-            <div class="button-container">
-                <button id="get-button">Get</button>
-                <button id="drop-button">Drop</button>
-                <button id="dropped-bottles-button">Dropped Bottles</button>
-            </div>
+    <main class="ocean-background">
+        <div class="ui-block">
             <!-- Message Display -->
             <div class="message-display">
                 <textarea id="message-textbox" placeholder="Enter your message here..."></textarea>
-                <button id="done-button">Done</button>
             </div>
+            <div class="ui-block-bottom">
+                <button id="done-button">Done</button>
+                <!-- Buttons -->
+                <div class="button-container">
+                    <button id="get-button">Get</button>
+                    <button id="drop-button">Drop</button>
+                    <button id="dropped-bottles-button">Dropped Bottles</button>
+                </div>
+            </div>
+        </div>
             <!-- Dropped Bottles History -->
             <div class="dropped-bottles-history">
                 <!-- Display dropped bottles and replies here -->
             </div>
-        </div>
     </main>
+    <div id="shoreline">
+    </div>
 </body>
 <script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    //Axios interceptor to attach the JWT to every request
+    console.log("Setting up interceptors...");
+    axios.interceptors.request.use(function (config) {
+        const token = localStorage.getItem('access_token');
+        console.log("Interceptor triggered with token:", token);
+        if (token) {
+            config.headers.Authorization = 'Bearer ' + token;
+        }
+        return config;
+    }, function (error) {
+        return Promise.reject(error);
+    });
+</script>
+<script>
+
+    // This is a load of garbage, I'll fix it up soon.
+
+    var shoreline = document.getElementById("shoreline")
+    var bottles = 0;
+
+    document.getElementById("get-button").addEventListener("click", function () {
+        var bottle = document.createElement("div");
+        bottle.classList.add("bottle");
+        bottle.innerHTML = "<img src=\"../static/images/bottle.png\" alt=\"bottle\" class=\"bottle-icon\">"
+        bottles++;
+
+        axios({
+            url: '/api/bottlemessages',
+            method: 'GET',
+        }).then(result => {
+            console.log(result.data);
+            message = result.data.message;
+            shoreline.prepend(bottle);
+        }).catch(error => {
+            console.error("Error fetching user info: ", error);
+            message = "the note is blank. . ."
+            shoreline.appendChild(bottle);
+        });
+        
+        bottle.addEventListener("click", function() {
+                console.log("clicked");
+                alert(message);
+                bottle.remove()
+        });
+
+        // todo:
+        // - move from alerts to visuals
+        // - allow user to drop bottles
+        // - fix issues
+    });
+</script>
+
 </html>

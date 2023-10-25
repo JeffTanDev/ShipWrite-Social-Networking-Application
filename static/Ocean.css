@@ -7,36 +7,51 @@ body, h1, p, button {
     font-family: Arial, sans-serif;
 }
 
+body {
+    background-image: url("../static/images/ocean_background.png");
+    background-size: 100vw 100vh;
+}
+
 /* Style the header */
 header {
-    background-color: #0077cc;
-    color: white;
     text-align: center;
     padding: 10px;
 }
 
 /* Style the main container */
-main {
-    text-align: center;
-    padding: 20px;
-}
+
 
 /* Style the ocean background */
+
 .ocean-background {
-    background-image: url('ocean.jpg'); /* Replace 'ocean.jpg' with your background image URL */
-    background-size: cover;
-    background-position: center;
-    width: 100%;
-    height: 500px;
+    position: absolute;
+    display: flex;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    justify-content: center;
+    height: 20vh;
+}
+
+
+.ui-block {
     position: relative;
+    display: block;
+    margin: 100px;
+    width: 50%;
+    height: 150%;
+}
+
+.ui-block-bottom {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
 
 /* Style the button container */
 .button-container {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    display: inline-block;
+    padding-right: 3%;
 }
 
 button {
@@ -49,16 +64,19 @@ button {
 }
 
 /* Style the message display and dropped bottles history */
-.message-display,
+.ui-block,
 .dropped-bottles-history {
     background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
     border-radius: 10px;
-    margin: 10px;
+}
+
+.message-display {
+    display: block;
+    padding: 3%;
 }
 
 textarea {
-    width: 100%;
+    width: 97%;
     height: 100px;
     padding: 10px;
     margin-bottom: 10px;
@@ -75,6 +93,8 @@ textarea {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    display: inline-block;
+    margin-left: 4%;
 }
 
 #done-button:hover {
@@ -86,4 +106,28 @@ textarea {
     display: none; /* Initially hidden */
     max-height: 300px;
     overflow-y: auto;
+    
+}
+
+#shoreline {
+    position:absolute;
+    display: flex;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    justify-content: center;
+    padding-top: 5vw;
+    height: 20vh;
+}
+
+.bottle-icon {
+    height: 10vh;
+    width: 10vh;
+    transition: 0.3s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+    transform-origin: bottom left;
+}
+
+.bottle-icon:hover, .bottle-icon:focus {
+    rotate: -5deg;
+    cursor: pointer;
 }
