@@ -38,6 +38,7 @@
                 }
             }).then(result => {
                 // Store the access_token in the localStorage
+                localStorage.removeItem('access_token');
                 localStorage.setItem('access_token', result.data.access_token);
                 window.location.href = `/homepage`;
             }).catch(error => {
