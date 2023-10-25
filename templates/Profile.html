@@ -5,40 +5,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <style>
+        /* Added CSS styles */
+        #settings-btn {
+            position: fixed; /* Fixed position relative to the viewport */
+            top: 10px; /* 10 pixels from the top */
+            right: 10px; /* 10 pixels from the right side */
+            border: none; /* No border */
+            background-color: transparent; /* Transparent background */
+        }
+
+        #settings-btn img {
+            width: 30px; /* Image width */
+            height: 30px; /* Image height */
+        }
+    </style>
 </head>
 <body>
+    <button id="settings-btn">
+        <img src="../static/setting.png" alt="Settings" />
+    </button>
     <h1>Profile</h1>
     <hr>
-    Email: 
-    <br>
-    First name: 
-    <br>
-    Last name: 
-    <br>
-    Phone: 
-    <br>
+    <strong>Username:</strong> <span id="username"></span><br>
+    <strong>Email:</strong> <span id="email"></span><br>
+    <strong>First Name:</strong> <span id="firstname"></span><br>
+    <strong>Last Name:</strong> <span id="lastname"></span><br>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        // Axios interceptor to attach the JWT to every request
-        // console.log("Setting up interceptors...");
-        // axios.interceptors.request.use(function (config) {
-        //     const token = localStorage.getItem('access_token');
-        //     console.log("Interceptor triggered with token:", token);
-        //     if (token) {
-        //         config.headers.Authorization = 'Bearer ' + token;
-        //     }
-        //     return config;
-        // }, function (error) {
-        //     return Promise.reject(error);
-        // });
+        //Axios interceptor to attach the JWT to every request
+        console.log("Setting up interceptors...");
+        axios.interceptors.request.use(function (config) {
+            const token = localStorage.getItem('access_token');
+            console.log("Interceptor triggered with token:", token);
+            if (token) {
+                config.headers.Authorization = 'Bearer ' + token;
+            }
+            return config;
+        }, function (error) {
+            return Promise.reject(error);
+        });
+    </script>
+    <script>
+        axios({
+            url: '/api/userinfo',
+            method: 'GET',
+        }).then(result => {
+            console.log(result.data);
 
-
-        // Example to fetch some user-specific data using JWT (if you have such an endpoint)
-        // axios.get('/api/some_user_data').then(response => {
-        //     console.log(response.data);
-        // });
-
+            // Update the profile fields with the response data
+            document.getElementById('username').textContent = result.data.username || 'N/A';
+            document.getElementById('email').textContent = result.data.email || 'N/A';
+            document.getElementById('firstname').textContent = result.data.firstname || 'N/A';
+            document.getElementById('lastname').textContent = result.data.lastname || 'N/A';
+        }).catch(error => {
+            console.error("Error fetching user info: ", error);
+            alert("Failed to load user profile.");
+        });
+    </script>
+    <script>
+        document.getElementById("settings-btn").addEventListener("click", function() {
+            window.location.href= '/edition';
+        })
     </script>
 </body>
 </html>

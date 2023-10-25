@@ -10,16 +10,15 @@ from tokenmanager import TokenManager
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 app = Flask(__name__)
-# app.config['JWT_SECRET_KEY'] = '1234'
-# jwt = JWTManager(app)
+app.config['JWT_SECRET_KEY'] = '1234'
+jwt = JWTManager(app)
 
 database = DataBase()
 usermanager = UserManager(database)
 tokenmanager = TokenManager(database)
 
+
 # Define a root route to load the LogIn.html page
-
-
 @app.route('/')
 def root():
     return render_template('LogIn.html')
@@ -58,7 +57,7 @@ def ocean(name=None):
 # Mock user data (replace this with a proper authentication system)
 users = {
     "user1": {"password": "12345"},
-    "123": {"password": "123"}
+    "123": {"password": "123", "email": "123@example.com", "firstname": "Haoyang", "lastname": "Tan"}
 }
 
 
@@ -68,15 +67,8 @@ def login():
     data = request.get_json()
 
     if usermanager.check_password(data['password'], data['username']):
-        access_token = tokenmanager.create_token(data['username'])
-        response = make_response(jsonify({
-            "access_token": access_token,
-            "message": "Login success"
-        }))
-
-        response.set_cookie('auth_token', access_token,
-                            httponly=True, secure=True)
-        return response, 200
+        access_token = create_access_token(identity=data['username'])
+        return jsonify(access_token=access_token), 200
     else:
         return jsonify({"error": "Username or password incorrect"}), 400
 
@@ -130,29 +122,28 @@ def create_account():
 
 
 @app.route('/api/userinfo', methods=['GET'])
+@jwt_required()
 def get_user_info():
-    # Will replace with actual connection to database
-    data = request.get_json()
-    username = data.get('username', '')
-    password = data.get('password', '')
-    firstname = data.get('firstname', '')
-    lastname = data.get('lastname', '')
-    email = data.get('email', '')
-    phone = data.get('phone', '')
+    current_user = get_jwt_identity()  # Retrieve the identity from the JWT token (here, it's the username)
 
-    if not username:
-        # If username is not in database, return a user not found error
-        response = ({"error": "Username not found"})
-        return jsonify(response), 404
+    # Construct the query
+    user_data = {
+        "fields": ["username", "first_name", "last_name", "email"],
+        "formatting": f"WHERE username = '{current_user}'"
+    }
 
+    # Retrieve user information from the database
+    user_info = database.select_from_db("user_info", user_data)
+
+    # Check if user information was successfully retrieved
+    if user_info and len(user_info) > 0:
+        user_info = user_info[0]  # Get the first matching record
+        return jsonify(username=user_info[0],
+                       firstname=user_info[1],
+                       lastname=user_info[2],
+                       email=user_info[3]), 200
     else:
-        return jsonify({"message": "Success"}), 200
-    # Check if user token is active, if not return unautorized error
-    '''
-    if not access_token:
-        response({"error": "User Timed Out. Login Required})
-        return jsonify(response), 
-    '''
+        return jsonify(error="User not found"), 404
 
 
 if __name__ == '__main__':

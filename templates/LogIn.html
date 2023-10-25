@@ -38,9 +38,7 @@
                 }
             }).then(result => {
                 // Store the access_token in the localStorage
-                //localStorage.setItem('access_token', result.data.access_token);
-                // console.log("Stored token:", result.data.access_token);  // Log the stored token
-                // window.location.href = `/profile/${username}`;
+                localStorage.setItem('access_token', result.data.access_token);
                 window.location.href = `/homepage`;
             }).catch(error => {
                 alert("Login failed.");
