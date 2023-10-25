@@ -7,6 +7,7 @@
     <title>Ocean Drift Bottles</title>
 </head>
 <body>
+    
     <main class="ocean-background">
         <div class="ui-block">
             <!-- Message Display -->
@@ -28,6 +29,9 @@
                 <!-- Display dropped bottles and replies here -->
             </div>
     </main>
+    <div id = "back-btn">
+        <img src="../static/images/lighthouse-svgrepo-com.svg" alt="back button">
+    </div>
     <div id="shoreline">
     </div>
 </body>
@@ -83,6 +87,11 @@
         // - move from alerts to visuals
         // - allow user to drop bottles
         // - fix issues
+    });
+</script>
+<script>
+    document.getElementById("back-btn").addEventListener("click", function() {
+            window.location.href= '/homepage';
     });
 </script>
 
