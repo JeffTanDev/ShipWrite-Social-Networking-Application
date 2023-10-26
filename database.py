@@ -111,3 +111,49 @@ class DataBase:
             return None
         finally:
             connection.close()
+
+    def update_values_in_db(self, table_name: str, data: dict, formatting: str) -> bool:
+        """
+        Update record in the database table with the provided data.
+
+        Args:
+            table_name (str): The name of the table to update records in.
+            data (dict): A dictionary containing key-value pairs where the keys are column names
+                        and the values are the new values to set in the specified table.
+            formatting (str): Additional SQL formatting to be appended to the UPDATE statement.
+                            For example, you can add conditions like WHERE clauses or LIMIT.
+
+        Returns:
+            bool: True if the update was successful, False otherwise.
+
+        This method connects to the database using the connection pool, constructs an SQL UPDATE statement
+        based on the provided data, and executes it. If the update is successful, it returns True; otherwise,
+        it returns False.
+
+        IMPORTANT:
+            - There must be some kind of formatting passed in. You cannot edit a record without narrowing it down on some condition.
+              If you do not pass a format string in the modification will change the value in the column for every single record.
+        """
+
+        connection = self.connection_pool.get_connection()
+
+        if connection is None:
+            print("Database connection is not available.")
+            return False
+
+        if formatting is None or formatting == '':
+            return False
+
+        update_formatted = ', '.join([f'{key}="{data[key]}"'for key in data])
+        update = f"UPDATE {table_name} SET {update_formatted} {formatting}"
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(update)
+                connection.commit()
+                return True
+        except mysql.connector.Error as e:
+            print(f"Error: {e}")
+            return False
+        finally:
+            connection.close()

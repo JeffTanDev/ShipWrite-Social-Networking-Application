@@ -4,18 +4,16 @@ from flask import render_template
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from database import DataBase
 from usermanager import UserManager
-from tokenmanager import TokenManager
+from decouple import config
 
 # will eventually help connect the different pages
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 app = Flask(__name__)
-app.config['JWT_SECRET_KEY'] = '1234'
+app.config['JWT_SECRET_KEY'] = config('JWT_KEY')
 jwt = JWTManager(app)
-
 database = DataBase()
 usermanager = UserManager(database)
-tokenmanager = TokenManager(database)
 
 
 # Define a root route to load the LogIn.html page
@@ -124,7 +122,8 @@ def create_account():
 @app.route('/api/userinfo', methods=['GET'])
 @jwt_required()
 def get_user_info():
-    current_user = get_jwt_identity()  # Retrieve the identity from the JWT token (here, it's the username)
+    # Retrieve the identity from the JWT token (here, it's the username)
+    current_user = get_jwt_identity()
 
     # Construct the query
     user_data = {
