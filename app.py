@@ -208,7 +208,7 @@ def get_bottle_message():
     message = database.get_random_message()
 
     if message:
-        return jsonify({"message_content": message[4]}), 200  # 假设消息内容在第二个字段
+        return jsonify({"message_content": message[4]}), 200
     else:
         return jsonify({"error": "No messages found"}), 404
 

@@ -4,9 +4,24 @@
     <meta charset="UTF-8">
     <title>Update Profile</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        #messageBox {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+        }
+        .success {
+            background-color: #4CAF50; /* green */
+        }
+        .error {
+            background-color: #f44336; /* red */
+        }
+    </style>
+    
 </head>
 <body>
-
+<div id="messageBox" style="display:none;"></div>
 <h2>Update Profile</h2>
 
 <form id="updateForm">
@@ -27,22 +42,8 @@
 
     <input type="button" value="Update" onclick="updateUserInfo()">
 </form>
-
+<script src="../static/Interceptor.js"></script>
 <script>
-    //Axios interceptor to attach the JWT to every request
-    console.log("Setting up interceptors...");
-        axios.interceptors.request.use(function (config) {
-            const token = localStorage.getItem('access_token');
-            console.log("Interceptor triggered with token:", token);
-            if (token) {
-                config.headers.Authorization = 'Bearer ' + token;
-            }
-            return config;
-        }, function (error) {
-            return Promise.reject(error);
-        });
-
-
     function getUserInfo() {
     axios.get('/api/userinfo')
         .then(function (response) {
@@ -71,11 +72,23 @@
         axios.post('/api/updateuserinfo', formData)
             .then(function (response) {
                 console.log(response);
-                alert(response.data.message);
+                displayMessage(response.data.message, "success");
+                setTimeout(function() { window.location.href = '/profile'; }, 2000);
             })
             .catch(function (error) {
-                alert(error);
+                if (error.response && error.response.data) {
+                    displayMessage(error.response.data.message, "error");
+                } else {
+                    displayMessage("An unknown error occurred", "error");
+                }
             });
+    }
+
+    function displayMessage(message, type) {
+        var messageBox = document.getElementById('messageBox');
+        messageBox.innerHTML = message;
+        messageBox.className = type;
+        messageBox.style.display = "block";
     }
     window.onload = getUserInfo;
 </script>

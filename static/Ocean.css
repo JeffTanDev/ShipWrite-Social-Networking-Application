@@ -71,8 +71,10 @@ button {
 }
 
 .message-display {
+    position: relative; /* For absolute positioning of child elements */
     display: block;
     padding: 3%;
+    z-index: 1; /* Lower z-index than bottle-message-area */
 }
 
 textarea {
@@ -172,4 +174,38 @@ textarea {
     100% {
         transform: rotate(4deg);
     }
+}
+
+.drop-reflection-area {
+    text-align: center;
+    color: #fff;
+    margin: 10px 0;
+    padding: 5px;
+    border-radius: 4px;
+    display: none; 
+}
+
+.bottle-message-area {
+    color: #fff;
+    margin: 0 auto; /* Centering */
+    padding: 3px;
+    border-radius: 4px;
+    display: none; /* Initially hidden, will be shown dynamically */
+    background-color: rgba(0, 0, 0, 0.6); /* Optional: Add background for visibility */
+    width: 80%; /* Set a width */
+    max-height: 150px; /* Maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    position: absolute; /* Positioning relative to the parent */
+    left: 50%; /* Centering horizontally */
+    top: 10%; /* Adjust the top as needed */
+    transform: translateX(-50%); /* Fine-tune horizontal centering */
+    z-index: 2; /* Ensure it's above other elements */
+}
+
+.success {
+    background-color: #4CAF50;
+}
+
+.error {
+    background-color: #f44336;
 }
