@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token, ge
 from database import DataBase
 from usermanager import UserManager
 from decouple import config
+from datetime import datetime
 
 # will eventually help connect the different pages
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -107,7 +108,7 @@ def update_user_info():
     data = request.get_json()
 
     # update dictionary
-    fields_to_update = {k: v for k, v in data.items() if k in ["password", "first_name", "last_name", "email", "phone"]}
+    fields_to_update = {k: v for k, v in data.items() if k in ["first_name", "last_name", "email", "phone"]}
 
     if not fields_to_update:
         return jsonify({"error": "No valid fields provided for update"}), 400
@@ -166,6 +167,44 @@ def get_user_info():
                        phone=user_info[4]), 200
     else:
         return jsonify(error="User not found"), 404
+
+@app.route('/api/bottlemessages/send', methods=['POST'])
+@jwt_required()
+def send_message():
+    data = request.get_json()
+    message_content = data.get('message')
+    current_user = get_jwt_identity()
+
+    # find user ID
+    user_info = database.select_from_db("user_info", {
+        "fields": ["user_id"],
+        "formatting": f"WHERE username = '{current_user}'"
+    })
+
+    if user_info and len(user_info) > 0:
+        user_id = user_info[0][0]  # Get user ID
+        time_sent = datetime.now()  # current time stamp
+
+        # save bottle to database
+        database.insert_into_db("ocean_messages", {
+            "user_id": user_id,
+            "time_sent": time_sent,
+            "message_content": message_content
+        })
+        return jsonify({"message": "Message sent successfully"}), 200
+    else:
+        return jsonify({"error": "User not found"}), 404
+
+
+@app.route('/api/bottlemessages', methods=['GET'])
+def get_bottle_message():
+    db = DataBase()  # 根据您的实际代码结构创建 DataBase 实例
+    message = db.get_random_message()
+
+    if message:
+        return jsonify({"message_content": message[1]}), 200  # 假设消息内容在第二个字段
+    else:
+        return jsonify({"error": "No messages found"}), 404
 
 
 if __name__ == '__main__':

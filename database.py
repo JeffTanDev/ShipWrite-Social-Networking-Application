@@ -157,3 +157,29 @@ class DataBase:
             return False
         finally:
             connection.close()
+
+    def get_random_message(self) -> tuple:
+        """
+        从数据库中随机获取一条消息。
+
+        Returns:
+            tuple or None: 返回包含随机消息的元组。如果发生错误或没有消息，则返回 None。
+        """
+
+        connection = self.connection_pool.get_connection()
+        if connection is None:
+            print("Database connection is not available.")
+            return None
+
+        query = "SELECT * FROM ocean_messages ORDER BY RAND() LIMIT 1;"
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+                message = cursor.fetchone()
+                return message
+        except mysql.connector.Error as e:
+            print(f"Error: {e}")
+            return None
+        finally:
+            connection.close()

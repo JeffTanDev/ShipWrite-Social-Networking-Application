@@ -22,8 +22,8 @@
     <label for="lname">New Last Name:</label><br>
     <input type="text" id="lname" name="last_name"><br>
 
-    <label for="password">New Password:</label><br>
-    <input type="password" id="password" name="password"><br>
+    <!-- <label for="password">New Password:</label><br>
+    <input type="password" id="password" name="password"><br> -->
 
     <input type="button" value="Update" onclick="updateUserInfo()">
 </form>
@@ -64,12 +64,13 @@
             phone: document.getElementById('phone').value,
             first_name: document.getElementById('fname').value,
             last_name: document.getElementById('lname').value,
-            password: document.getElementById('password').value
+            // password: document.getElementById('password').value
         };
 
         axios.post('/api/updateuserinfo', formData)
             .then(function (response) {
-                alert(message);
+                console.log(response);
+                alert(response.data.message);
             })
             .catch(function (error) {
                 alert(error);

@@ -55,40 +55,83 @@
 
     // This is a load of garbage, I'll fix it up soon.
 
-    var shoreline = document.getElementById("shoreline")
-    var bottles = 0;
+    // var shoreline = document.getElementById("shoreline")
+    // var bottles = 0;
 
+    // document.getElementById("get-button").addEventListener("click", function () {
+    //     var bottle = document.createElement("div");
+    //     bottle.classList.add("bottle");
+    //     bottle.innerHTML = "<img src=\"../static/images/bottle.png\" alt=\"bottle\" class=\"bottle-icon\">"
+    //     bottles++;
+
+    //     axios({
+    //         url: '/api/bottlemessages',
+    //         method: 'GET',
+    //     }).then(result => {
+    //         console.log(result.data);
+    //         message = result.data.message;
+    //         shoreline.prepend(bottle);
+    //     }).catch(error => {
+    //         console.error("Error fetching user info: ", error);
+    //         message = "the note is blank. . ."
+    //         shoreline.appendChild(bottle);
+    //     });
+        
+    //     bottle.addEventListener("click", function() {
+    //             console.log("clicked");
+    //             alert(message);
+    //             bottle.remove()
+    //     });
+
+    //     // todo:
+    //     // - move from alerts to visuals
+    //     // - allow user to drop bottles
+    //     // - fix issues
+    // });
     document.getElementById("get-button").addEventListener("click", function () {
-        var bottle = document.createElement("div");
-        bottle.classList.add("bottle");
-        bottle.innerHTML = "<img src=\"../static/images/bottle.png\" alt=\"bottle\" class=\"bottle-icon\">"
-        bottles++;
-
         axios({
             url: '/api/bottlemessages',
             method: 'GET',
         }).then(result => {
             console.log(result.data);
-            message = result.data.message;
+            let message = result.data.message;
+            let bottle = createBottle(message_content);
             shoreline.prepend(bottle);
         }).catch(error => {
-            console.error("Error fetching user info: ", error);
-            message = "the note is blank. . ."
+            console.error("Error fetching message: ", error);
+            let bottle = createBottle("The note is blank...");
             shoreline.appendChild(bottle);
         });
-        
-        bottle.addEventListener("click", function() {
-                console.log("clicked");
-                alert(message);
-                bottle.remove()
-        });
+    });
 
-        // todo:
-        // - move from alerts to visuals
-        // - allow user to drop bottles
-        // - fix issues
+    function createBottle(message) {
+        var bottle = document.createElement("div");
+        bottle.classList.add("bottle");
+        bottle.innerHTML = "<img src=\"../static/images/bottle.png\" alt=\"bottle\" class=\"bottle-icon\">";
+
+        bottle.addEventListener("click", function() {
+            console.log("Bottle clicked with message: ", message);
+            alert(message);
+            bottle.remove();
+        });
+        return bottle;
+    }
+</script>
+<script>
+    document.getElementById("drop-button").addEventListener("click", function() {
+        var messageContent = document.getElementById("message-textbox").value;
+        axios.post('/api/bottlemessages/send', {
+            message: messageContent
+        }).then(response => {
+            console.log(response.data);
+            alert("Message dropped successfully!");
+        }).catch(error => {
+            console.error("Error sending message: ", error);
+            alert("Failed to drop the message.");
+        });
     });
 </script>
+
 <script>
     document.getElementById("back-btn").addEventListener("click", function() {
             window.location.href= '/homepage';
