@@ -42,7 +42,7 @@
                 localStorage.setItem('access_token', result.data.access_token);
                 window.location.href = `/homepage`;
             }).catch(error => {
-                alert("Login failed.");
+                alert("Username or password incorrect");
             });
         });
 

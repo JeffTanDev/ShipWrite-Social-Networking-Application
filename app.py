@@ -10,7 +10,8 @@ from decouple import config
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 app = Flask(__name__)
-app.config['JWT_SECRET_KEY'] = config('JWT_KEY')
+# app.config['JWT_SECRET_KEY'] = config('JWT_KEY')
+app.config['JWT_SECRET_KEY'] = config('JWT_KEY', default='YourDefaultSecretKey')
 jwt = JWTManager(app)
 database = DataBase()
 usermanager = UserManager(database)
@@ -99,6 +100,27 @@ def change_password():
         return jsonify(response), 400
 
 
+@app.route('/api/updateuserinfo', methods=['POST'])
+@jwt_required()
+def update_user_info():
+    current_user = get_jwt_identity()  # get current user name
+    data = request.get_json()
+
+    # update dictionary
+    fields_to_update = {k: v for k, v in data.items() if k in ["password", "first_name", "last_name", "email", "phone"]}
+
+    if not fields_to_update:
+        return jsonify({"error": "No valid fields provided for update"}), 400
+
+    # update database
+    update_result = database.update_values_in_db("user_info", fields_to_update, f"WHERE username = '{current_user}'")
+
+    if update_result:
+        return jsonify({"message": "User info updated successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to update user info"}), 500
+
+
 # Route to handle the creation of a new account
 @app.route('/api/newaccount', methods=['POST'])
 def create_account():
@@ -127,7 +149,7 @@ def get_user_info():
 
     # Construct the query
     user_data = {
-        "fields": ["username", "first_name", "last_name", "email"],
+        "fields": ["username", "first_name", "last_name", "email", "phone"],
         "formatting": f"WHERE username = '{current_user}'"
     }
 
@@ -138,9 +160,10 @@ def get_user_info():
     if user_info and len(user_info) > 0:
         user_info = user_info[0]  # Get the first matching record
         return jsonify(username=user_info[0],
-                       firstname=user_info[1],
-                       lastname=user_info[2],
-                       email=user_info[3]), 200
+                       first_name=user_info[1],
+                       last_name=user_info[2],
+                       email=user_info[3],
+                       phone=user_info[4]), 200
     else:
         return jsonify(error="User not found"), 404
 

@@ -2,11 +2,81 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Update Profile</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <h1>Edition</h1>
-    <hr>
+
+<h2>Update Profile</h2>
+
+<form id="updateForm">
+    <label for="email">New Email:</label><br>
+    <input type="email" id="email" name="email"><br>
+
+    <label for="phone">New Phone:</label><br>
+    <input type="text" id="phone" name="phone"><br>
+
+    <label for="fname">New First Name:</label><br>
+    <input type="text" id="fname" name="first_name"><br>
+
+    <label for="lname">New Last Name:</label><br>
+    <input type="text" id="lname" name="last_name"><br>
+
+    <label for="password">New Password:</label><br>
+    <input type="password" id="password" name="password"><br>
+
+    <input type="button" value="Update" onclick="updateUserInfo()">
+</form>
+
+<script>
+    //Axios interceptor to attach the JWT to every request
+    console.log("Setting up interceptors...");
+        axios.interceptors.request.use(function (config) {
+            const token = localStorage.getItem('access_token');
+            console.log("Interceptor triggered with token:", token);
+            if (token) {
+                config.headers.Authorization = 'Bearer ' + token;
+            }
+            return config;
+        }, function (error) {
+            return Promise.reject(error);
+        });
+
+
+    function getUserInfo() {
+    axios.get('/api/userinfo')
+        .then(function (response) {
+            const userInfo = response.data;
+            console.log(userInfo);
+            document.getElementById('email').value = userInfo.email;
+            document.getElementById('phone').value = userInfo.phone;
+            document.getElementById('fname').value = userInfo.first_name;
+            document.getElementById('lname').value = userInfo.last_name;
+        })
+        .catch(function (error) {
+            console.error("Error fetching user info:", error);
+        });
+    }
+
+    function updateUserInfo() {
+        var formData = {
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            first_name: document.getElementById('fname').value,
+            last_name: document.getElementById('lname').value,
+            password: document.getElementById('password').value
+        };
+
+        axios.post('/api/updateuserinfo', formData)
+            .then(function (response) {
+                alert(message);
+            })
+            .catch(function (error) {
+                alert(error);
+            });
+    }
+    window.onload = getUserInfo;
+</script>
+
 </body>
 </html>
