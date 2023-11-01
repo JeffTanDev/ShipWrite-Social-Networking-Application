@@ -12,7 +12,8 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 app = Flask(__name__)
 # app.config['JWT_SECRET_KEY'] = config('JWT_KEY')
-app.config['JWT_SECRET_KEY'] = config('JWT_KEY', default='YourDefaultSecretKey')
+app.config['JWT_SECRET_KEY'] = config(
+    'JWT_KEY', default='YourDefaultSecretKey')
 jwt = JWTManager(app)
 database = DataBase()
 usermanager = UserManager(database)
@@ -108,13 +109,18 @@ def update_user_info():
     data = request.get_json()
 
     # update dictionary
-    fields_to_update = {k: v for k, v in data.items() if k in ["first_name", "last_name", "email", "phone"]}
+    fields_to_update = {k: v for k, v in data.items(
+    ) if k in ["first_name", "last_name", "email", "phone", "password"]}
 
     if not fields_to_update:
         return jsonify({"error": "No valid fields provided for update"}), 400
 
+    if 'password' in fields_to_update.keys():
+        usermanager.update_password(fields_to_update)
+
     # update database
-    update_result = database.update_values_in_db("user_info", fields_to_update, f"WHERE username = '{current_user}'")
+    update_result = database.update_values_in_db(
+        "user_info", fields_to_update, f"WHERE username = '{current_user}'")
 
     if update_result:
         return jsonify({"message": "User info updated successfully"}), 200
@@ -168,6 +174,7 @@ def get_user_info():
     else:
         return jsonify(error="User not found"), 404
 
+
 @app.route('/api/bottlemessages/send', methods=['POST'])
 @jwt_required()
 def send_message():
@@ -198,11 +205,10 @@ def send_message():
 
 @app.route('/api/bottlemessages', methods=['GET'])
 def get_bottle_message():
-    db = DataBase()  # 根据您的实际代码结构创建 DataBase 实例
-    message = db.get_random_message()
+    message = database.get_random_message()
 
     if message:
-        return jsonify({"message_content": message[1]}), 200  # 假设消息内容在第二个字段
+        return jsonify({"message_content": message[4]}), 200  # 假设消息内容在第二个字段
     else:
         return jsonify({"error": "No messages found"}), 404
 

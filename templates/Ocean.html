@@ -94,7 +94,7 @@
             method: 'GET',
         }).then(result => {
             console.log(result.data);
-            let message = result.data.message;
+            let message_content = result.data.message_content;
             let bottle = createBottle(message_content);
             shoreline.prepend(bottle);
         }).catch(error => {

@@ -25,7 +25,7 @@ class UserManager():
 
         self.database = database
 
-    def hash_password(self, password: str) -> str:
+    def hash_password(self, password: str) -> tuple:
         """
         Hash a given password using bcrypt.
 
@@ -39,6 +39,33 @@ class UserManager():
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
         return (hashed_password, salt)
+
+    def update_password(self, data: dict) -> bool:
+        """
+        Update the password and password salt in the provided data dictionary with new hashed values.
+
+        Args:
+            data (dict): A dictionary containing user data, including the "password" to be hashed.
+
+        Returns:
+            bool: True if the password and password salt were successfully updated, False otherwise.
+
+        This method takes a dictionary of user data as input and updates the "password" and "password_salt"
+        values in the dictionary with new hashed values. The updated values are obtained by calling the
+        `hash_password` method, which returns a tuple of bytes-like objects representing the hashed
+        password and password salt. This method then decodes these byte-like objects to UTF-8 strings
+        and updates the data dictionary.
+
+        If the password hashing process is successful, the method returns True. If an exception is raised
+        during the process, it returns False, indicating that the update was not successful.
+        """
+        try:
+            new_password_info = self.hash_password(data["password"])
+            data["password"] = new_password_info[0].decode('utf-8')
+            data["password_salt"] = new_password_info[1].decode('utf-8')
+            return True
+        except:
+            return False
 
     def check_password(self, password: str, username: str) -> bool:
         """
