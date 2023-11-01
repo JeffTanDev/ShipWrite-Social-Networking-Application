@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Macondo&family=Raleway&display=swap');
+
 /* Reset some default styles */
 body, h1, p, button {
     margin: 0;
@@ -75,6 +77,55 @@ button {
     display: block;
     padding: 3%;
     z-index: 1; /* Lower z-index than bottle-message-area */
+}
+
+.overlay-front {
+    position: absolute; 
+    display: flex;
+    align-content: top center;
+    justify-content: center;
+    padding: 5%;
+    z-index: 1;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    z-index: 2;
+}
+
+.overlay-back {
+    background-color: black;
+    filter: opacity(0.5);
+    position: absolute; 
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    z-index: 2;
+}
+
+.overlay {
+    pointer-events: none;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 0.4s;
+}
+
+.note-text {
+    box-sizing: border-box;
+    background-image: url("../static/images/note_sprite.png");
+    filter: drop-shadow(5px 5px 5px);
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 90vw;
+    min-width: 57vw;
+    height: 70vh;
+    padding: 8vh;
+    margin-bottom: 5%;
+    background-size: 100% 100%;
+    text-wrap: wrap;
+    font-size: 32px;
+    font-family: 'Macondo', cursive;
 }
 
 textarea {

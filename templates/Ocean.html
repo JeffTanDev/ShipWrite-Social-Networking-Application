@@ -7,10 +7,12 @@
     <title>Ocean Drift Bottles</title>
 </head>
 <body>
-    
+    <!-- Bottle Message Display -->
+    <div class="overlay overlay-back"></div>
+    <div class="overlay overlay-front">
+        <div class="note-text" id="main-note"></div>
+    </div>
     <main class="ocean-background">
-        <!-- Bottle Message Display -->
-        <textarea id="bottle-message-display" class="bottle-message-area"></textarea>
         <div class="ui-block">
             <!-- Message Display -->
             <div class="message-display">
@@ -58,6 +60,14 @@
         });
     });
 
+    document.onkeydown = function(e) {
+        e = e || window.event;
+        console.log("WOOO")
+        if (e.key === "Escape" || e.key === "Esc") {
+            toggleoverlay(false)
+        }
+    }
+
     function createBottle(message) {
         var bottle = document.createElement("div");
         bottle.classList.add("bottle");
@@ -65,7 +75,8 @@
 
         bottle.addEventListener("click", function() {
             console.log("Bottle clicked with message: ", message);
-            displaybottle("bottle-message-display", message); 
+            displaybottle("main-note", message); 
+            toggleoverlay(true);
             bottle.remove();
         });
         return bottle;
@@ -73,8 +84,7 @@
 
     function displaybottle(elementId, message) {
         var bottleBox = document.getElementById(elementId);
-        bottleBox.value = message;
-        bottleBox.style.display = "block";
+        bottleBox.innerText = message;
     }
 
 </script>
@@ -98,6 +108,14 @@
         messageBox.className = `drop-reflection-area ${type}`;
         messageBox.style.display = "block";
         setTimeout(function() { messageBox.style.display = "none"; }, 1500);
+    }
+
+    function toggleoverlay(on) {
+        var overlay = document.getElementsByClassName("overlay");
+        for (var i = 0; i < overlay.length; i++) {
+            overlay[i].style.opacity = on ? '1.0' : '0.0';
+            overlay[i].style.pointerEvents = on ? 'all' :'none';
+        }
     }
 </script>
 
