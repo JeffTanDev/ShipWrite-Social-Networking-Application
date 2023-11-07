@@ -51,7 +51,6 @@ class DataBase:
 
         insert = f"INSERT INTO {table_name} ({', '.join(data.keys())}) VALUES ({', '.join(['%s' for _ in data])})"
         values = tuple(data.values())
-
         try:
             with connection.cursor() as cursor:
                 cursor.execute(insert, values)

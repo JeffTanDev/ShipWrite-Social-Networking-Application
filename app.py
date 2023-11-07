@@ -68,7 +68,11 @@ def login():
     data = request.get_json()
 
     if usermanager.check_password(data['password'], data['username']):
-        access_token = create_access_token(identity=data['username'])
+        user_info = database.select_from_db("user_info", {
+            "fields": ["user_id"],
+            "formatting": f"WHERE username ='{data['username']}'"
+        })
+        access_token = create_access_token(identity=user_info[0][0])
         return jsonify(access_token=access_token), 200
     else:
         return jsonify({"error": "Username or password incorrect"}), 400
@@ -105,7 +109,7 @@ def change_password():
 @app.route('/api/updateuserinfo', methods=['POST'])
 @jwt_required()
 def update_user_info():
-    current_user = get_jwt_identity()  # get current user name
+    current_userID= get_jwt_identity()  # get current user name
     data = request.get_json()
 
     # update dictionary
@@ -120,7 +124,7 @@ def update_user_info():
 
     # update database
     update_result = database.update_values_in_db(
-        "user_info", fields_to_update, f"WHERE username = '{current_user}'")
+        "user_info", fields_to_update, f"WHERE user_ID = '{current_userID}'")
 
     if update_result:
         return jsonify({"message": "User info updated successfully"}), 200
@@ -151,13 +155,13 @@ def create_account():
 @app.route('/api/userinfo', methods=['GET'])
 @jwt_required()
 def get_user_info():
-    # Retrieve the identity from the JWT token (here, it's the username)
-    current_user = get_jwt_identity()
+    # Retrieve the identity from the JWT token (here, it's the user ID)
+    current_userID = get_jwt_identity()
 
     # Construct the query
     user_data = {
         "fields": ["username", "first_name", "last_name", "email", "phone"],
-        "formatting": f"WHERE username = '{current_user}'"
+        "formatting": f"WHERE user_ID ='{current_userID}'"
     }
 
     # Retrieve user information from the database
@@ -180,38 +184,85 @@ def get_user_info():
 def send_message():
     data = request.get_json()
     message_content = data.get('message')
-    current_user = get_jwt_identity()
+    current_userID = get_jwt_identity()
 
-    # find user ID
-    user_info = database.select_from_db("user_info", {
-        "fields": ["user_id"],
-        "formatting": f"WHERE username = '{current_user}'"
-    })
-
-    if user_info and len(user_info) > 0:
-        user_id = user_info[0][0]  # Get user ID
-        time_sent = datetime.now()  # current time stamp
-
-        # save bottle to database
-        database.insert_into_db("ocean_messages", {
-            "user_id": user_id,
-            "time_sent": time_sent,
+    # Get Insert Query Ready
+    message_data = {
+            "user_id": current_userID,
+            "time_sent": datetime.utcnow(),
             "message_content": message_content
-        })
+            }
+
+    # save bottle to database
+    if database.insert_into_db("ocean_messages", message_data):
         return jsonify({"message": "Message sent successfully"}), 200
     else:
         return jsonify({"error": "User not found"}), 404
 
 
 @app.route('/api/bottlemessages', methods=['GET'])
+@jwt_required()
 def get_bottle_message():
     message = database.get_random_message()
+    current_userID = get_jwt_identity()
 
     if message:
-        return jsonify({"message_content": message[4]}), 200
+        message_id = message[0] 
+        database.insert_into_db('viewed_ocean_messages', {'ocean_messageID': message_id, 'user_ID': current_userID, 'time_viewed': datetime.utcnow()})
+        return jsonify({"message_content": message[4], "message_ID": message[0]}), 200
     else:
         return jsonify({"error": "No messages found"}), 404
 
+
+@app.route('/api/bottlemessage/dropped', methods=['POST'])
+@jwt_required()
+def get_dropped_bottles():
+    current_userID = get_jwt_identity()
+    data = request.get_json()
+    
+    if data['time']:
+        cut_off_time = data['time']
+    else:
+        cut_off_time = datetime.utcnow()
+
+    # Get up to 10 bottles dropped by the user
+    # cut_off_time is in place so that if the user has 10+ messages we load the first ten and then
+    # if it is requested to load more hit the route again but set the cut_off_time to be that of the oldest curently held message
+    dropped_bottles = database.select_from_db('ocean_messages', 
+                                              {'fields:': ['ocean_messageID', 'time_sent', 'message_content'], 
+                                               'formatting': 
+                                               f"WHERE user_ID = {current_userID} AND time_sent <= {cut_off_time} ORDER BY time_sent DESC LIMIT 10"})
+    
+    
+    if dropped_bottles:
+        return jsonify({"dropped_bottles": dropped_bottles}), 200
+    else:
+        return jsonify({"error": "No bottles dropped so far!"}), 400
+    
+
+@app.route('/api/bottlemessage/<messageID>/replies', methods=['POST'])
+@jwt_required()
+def bottle_replies(messageID):
+    current_userID = get_jwt_identity()
+    data = request.get_json()
+    
+    if data['time']:
+        cut_off_time = data['time']
+    else:
+        cut_off_time = datetime.utcnow()
+
+    # Get up to 10 replies on a particular bottle
+    # cut_off_time is in place so that if the bottle has 10+ replies we load the first ten and then
+    # if it is requested to load more hit the route again but set the cut_off_time to be that of the oldest curently held message
+    bottle_replies = database.select_from_db('ocean_messages_replies', 
+                                              {'fields:': ['replyID', 'content', 'time_added'], 
+                                               'formatting': 
+                                               f"WHERE ocean_messageID = {messageID} AND time_sent <= {cut_off_time} ORDER BY time_sent DESC LIMIT 10"})
+
+    if bottle_replies:
+        return jsonify({"bottle_replies": bottle_replies}), 200
+    else:
+        return jsonify({"error": "No replies so far!"}), 400
 
 if __name__ == '__main__':
     app.run()
