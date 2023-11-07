@@ -240,10 +240,22 @@ def get_dropped_bottles():
         return jsonify({"error": "No bottles dropped so far!"}), 400
     
 
-@app.route('/api/bottlemessage/<messageID>/replies', methods=['POST'])
+@app.route('/api/bottlemessage/<messageID>/addreply', methods=['POST'])
 @jwt_required()
 def bottle_replies(messageID):
     current_userID = get_jwt_identity()
+    data = request.get_json()
+    
+    reply_inserted = database.insert_into_db('ocean_message_replies', 
+                                             {'ocean_messageID': messageID, 'user_ID': current_userID, 'content': data['content'], 'time_added': datetime.utcnow()})
+
+    if reply_inserted:
+        return jsonify({"message": "Reply added sucessfully!"}), 200
+    else:
+        return jsonify({"message": "There was an error adding the reply, please try again."}), 400
+
+@app.route('/api/bottlemessage/<messageID>/replies', methods=['POST'])
+def bottle_replies(messageID):
     data = request.get_json()
     
     if data['time']:
