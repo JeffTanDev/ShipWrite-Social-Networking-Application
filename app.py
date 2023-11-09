@@ -55,13 +55,6 @@ def ocean(name=None):
     return render_template('Ocean.html', name=name)
 
 
-# Mock user data (replace this with a proper authentication system)
-users = {
-    "user1": {"password": "12345"},
-    "123": {"password": "123", "email": "123@example.com", "firstname": "Haoyang", "lastname": "Tan"}
-}
-
-
 # Route to handle the login API (similar to the previous example)
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -76,34 +69,6 @@ def login():
         return jsonify(access_token=access_token), 200
     else:
         return jsonify({"error": "Username or password incorrect"}), 400
-
-
-# Route to handle the change password API
-@app.route('/api/changepassword', methods=['POST'])
-def change_password():
-    data = request.get_json()
-    username = data.get('username', '')
-    email = data.get('email', '')
-    password = data.get('password', '')
-    passwordcheck = data.get('passwordcheck', '')
-    if username in users and users[username]['email'] == email:
-        if (password == passwordcheck) and (not (users[username]['password'] == password)):
-            users[username]['password'] = password
-            access_token = f"Bearer Token for {username}"
-            response = {
-                "access_token": access_token,
-                "message": "Change success"
-            }
-            return jsonify(response), 200
-        elif users[username]['password'] == password:
-            response = {"error": "password is the same with the used one"}
-            return jsonify(response), 400
-        else:
-            response = {"error": "Two new passwod need be the same!"}
-            return jsonify(response), 400
-    else:
-        response = {"error": "Username does not match with this email"}
-        return jsonify(response), 400
 
 
 @app.route('/api/updateuserinfo', methods=['POST'])
@@ -233,7 +198,6 @@ def get_dropped_bottles():
                                                'formatting': 
                                                f"WHERE user_ID = {current_userID} AND time_sent <= {cut_off_time} ORDER BY time_sent DESC LIMIT 10"})
     
-    
     if dropped_bottles:
         return jsonify({"dropped_bottles": dropped_bottles}), 200
     else:
@@ -242,7 +206,7 @@ def get_dropped_bottles():
 
 @app.route('/api/bottlemessage/<messageID>/addreply', methods=['POST'])
 @jwt_required()
-def bottle_replies(messageID):
+def add_bottle_reply(messageID):
     current_userID = get_jwt_identity()
     data = request.get_json()
     
@@ -255,7 +219,7 @@ def bottle_replies(messageID):
         return jsonify({"message": "There was an error adding the reply, please try again."}), 400
 
 @app.route('/api/bottlemessage/<messageID>/replies', methods=['POST'])
-def bottle_replies(messageID):
+def view_bottle_replies(messageID):
     data = request.get_json()
     
     if data['time']:
