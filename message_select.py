@@ -1,4 +1,5 @@
 import database
+import app
 import mysql.connector
 from mysql.connector import pooling
 
@@ -23,7 +24,7 @@ def select_message():
         with connection.cursor() as cursor:
             #execute the query
             cursor.execute(query)
-            #fetch the first message from the query
+            #fetch the first message from the query(The least viewed )
             message = cursor.fetchone()
             return message
     except mysql.connector.Error as e:
