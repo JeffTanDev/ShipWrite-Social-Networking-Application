@@ -2,6 +2,7 @@ import database
 import app
 import mysql.connector
 from mysql.connector import pooling
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
 
 def select_message():
@@ -13,18 +14,33 @@ def select_message():
 
     # If an age is added to messages, that can also be used to help increase the 
     # chance of selection; older the message, higher the chance
+    current_userID = get_jwt_identity()
     connection = database.connection_pool.get_connection()
     if connection is None:
         print("Database connection is not available.")
         return None
-    # Query the database for up to 100 messages and order them by the number of times viewed
-    query = "SELECT * FROM ocean_messages ORDER times_viewed LIMIT 100;"
+    # Query the database for up to 100 messages and order them by the number of times viewed 
+    # That is not also written by the current user
+
+    '''
+    if ocean_messages empty(No unviewed messages):
+        query = "SELECT * FROM viewed_ocean_messages\
+                WHERE NOT user_id = 'current_userID'\
+                ORDER times_viewed\
+                LIMIT 100;"
+    else:
+    '''
+    query = "SELECT * FROM ocean_messages\
+            WHERE NOT user_id = 'current_userID'\
+            ORDER times_viewed\
+            LIMIT 100;"
+    
 
     try:
         with connection.cursor() as cursor:
             #execute the query
             cursor.execute(query)
-            #fetch the first message from the query(The least viewed )
+            #fetch the first message from the query(The least viewed)
             message = cursor.fetchone()
             return message
     except mysql.connector.Error as e:
@@ -45,6 +61,5 @@ def select_message():
     # bottle one is given a .5% or 50% chance(1/2)
     # bottle 2 is given a .05% or 5% chance(1/20)
     # possible to add other variables to the chance to edit the chance of selection
-    
-    
+    # Messages have lat and long but users don't to compare to
     return message
