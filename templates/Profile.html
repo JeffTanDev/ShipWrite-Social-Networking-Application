@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link rel="stylesheet" href="../static/Standard.css">
     <style>
         /* Added CSS styles */
         #settings-btn {
@@ -22,15 +23,17 @@
     </style>
 </head>
 <body>
-    <button id="settings-btn">
-        <img src="../static/setting.png" alt="Settings" />
-    </button>
-    <h1>Profile</h1>
-    <hr>
-    <strong>Username:</strong> <span id="username"></span><br>
-    <strong>Email:</strong> <span id="email"></span><br>
-    <strong>First Name:</strong> <span id="firstname"></span><br>
-    <strong>Last Name:</strong> <span id="lastname"></span><br>
+    <div class="main-card">
+        <button id="settings-btn">
+            <img src="../static/setting.png" alt="Settings" />
+        </button>
+        <h1>Profile</h1>
+        <hr>
+        <strong>Username:</strong> <span id="username"></span><br>
+        <strong>Email:</strong> <span id="email"></span><br>
+        <strong>First Name:</strong> <span id="firstname"></span><br>
+        <strong>Last Name:</strong> <span id="lastname"></span>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../static/Interceptor.js"></script>

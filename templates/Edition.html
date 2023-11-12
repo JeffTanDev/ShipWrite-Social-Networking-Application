@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Update Profile</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="../static/Standard.css">
     <style>
         #messageBox {
             margin-bottom: 20px;
@@ -15,33 +16,36 @@
             background-color: #4CAF50; /* green */
         }
         .error {
-            background-color: #f44336; /* red */
+            background-color: #cb3032; /* red */
         }
     </style>
     
 </head>
 <body>
-<div id="messageBox" style="display:none;"></div>
-<h2>Update Profile</h2>
+<div class="main-card">
 
-<form id="updateForm">
-    <label for="email">New Email:</label><br>
-    <input type="email" id="email" name="email"><br>
-
-    <label for="phone">New Phone:</label><br>
-    <input type="text" id="phone" name="phone"><br>
-
-    <label for="fname">New First Name:</label><br>
-    <input type="text" id="fname" name="first_name"><br>
-
-    <label for="lname">New Last Name:</label><br>
-    <input type="text" id="lname" name="last_name"><br>
-
-    <label for="password">New Password:</label><br>
-    <input type="password" id="password" name="password"><br>
-
-    <input type="button" value="Update" onclick="updateUserInfo()">
-</form>
+    <div id="messageBox" style="display:none;"></div>
+    <h2>Update Profile</h2>
+    
+    <form id="updateForm">
+        <label for="email">New Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+    
+        <label for="phone">New Phone:</label><br>
+        <input type="text" id="phone" name="phone"><br>
+    
+        <label for="fname">New First Name:</label><br>
+        <input type="text" id="fname" name="first_name"><br>
+    
+        <label for="lname">New Last Name:</label><br>
+        <input type="text" id="lname" name="last_name"><br>
+    
+        <label for="password">New Password:</label><br>
+        <input type="password" id="password" name="password"><br>
+    
+        <input type="button" value="Update" onclick="updateUserInfo()">
+    </form>
+</div>
 <script src="../static/Interceptor.js"></script>
 <script>
     function getUserInfo() {

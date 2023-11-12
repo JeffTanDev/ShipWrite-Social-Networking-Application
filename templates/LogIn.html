@@ -4,21 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="../static/Standard.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <hr>
-    <form id="login-form">
-        Username: <input type="text" name="username" id="username" placeholder="Juan_CS422">
-        <br>
-        Password: <input type="password" name="password" id="password">
+    <div class="main-card">
+        <h1>Login</h1>
         <hr>
-        <!-- ... Your login form inputs ... -->
-        <button type="button" id="login-button">Login</button>
-        <button type="reset">Reset</button>
-        <br>
-        <button type="button" id="create-user">Create account</a></button>
-    </form>
+        <form id="login-form">
+            <input type="text" name="username" id="username" placeholder="Username">
+            <br>
+            <input type="password" name="password" id="password" placeholder="Password">
+            <hr>
+            <!-- ... Your login form inputs ... -->
+            <button type="button" id="login-button">Login</button>
+            <button type="reset">Reset</button>
+            <br><br>
+            <div style="text-align: center;">
+                <small style="align-self: center;">Don't have an account yet?</small>
+                <br>
+                <button type="button" id="create-user">Create account</a></button>
+            </div>
+        </form>
+    </div>
 
     <!-- Include the Axios library -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

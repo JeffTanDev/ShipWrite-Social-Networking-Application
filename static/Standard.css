@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Macondo&family=Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fondamento&display=swap');
+
+:root {
+    --bg_white: #f3f6f2;
+    --light_blue: #b2d1d6;
+    --paper: #e0dcc9;
+    --red: #cb3032;
+    --dark_blue: #32586b;
+}
+
+body {
+    background-color: var(--bg_white);
+}
+
+/* Reset some default styles */
+body, h1, p, button {
+    justify-content: center;
+    align-content: center;
+    margin: 0;
+    padding: 0;
+    border: none;
+    color: var(--dark_blue);
+    font-family: 'Sawarabi Mincho', serif;
+    outline: none;
+    display: flex;
+}
+
+* {
+    font-family: 'Sawarabi Mincho', serif;
+}
+
+.main-card {
+    display: flexbox;
+    background-color: var(--paper);
+    min-width: 40vh;
+    min-height: 20vh;
+    border-radius: 20px;
+    padding: 3%;
+    margin: 5vh;
+    font-size: 1.5rem;
+    box-shadow: var(--dark_blue) 5px 5px 10px;
+    transition: 1s;
+}
+
+h1 {
+    font-family: 'Fondamento', cursive;
+}
+
+hr {
+    border-top: 3px dashed;
+}
+
+button {
+    display: inline;
+    background-color: var(--bg_white);
+    color: var(--dark_blue);
+    padding: 0.3rem;
+    font-size: 1.3rem;
+    margin: 0.4rem;
+    border-radius: 0.3rem;
+    transition: 250ms;
+    cursor: pointer;
+    box-shadow: var(--dark_blue) 2px 2px 2px;
+    border: 2px solid var(--dark_blue);
+}
+
+input {
+    background-color: var(--bg_white);
+    border: none;
+    font-size: 1.1rem;
+    width: 100%;
+    border-radius: 0.3rem;
+    padding-left: 0.5rem;
+}
+
+button:hover, button:focus {
+    background-color: var(--dark_blue);
+    color: var(--bg_white);
+    rotate: -3deg;
+    scale: 1.04;
+}

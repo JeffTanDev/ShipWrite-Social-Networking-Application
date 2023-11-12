@@ -4,27 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
+    <link rel="stylesheet" href="../static/Standard.css">
 </head>
 <body>
-    <h1>Create Account</h1>
-    <hr>
-    Text boxes with an asterisk are required. Others are optional.
-    <form id="create-account-form">
-        Username*: <input type="text" name="username" id="username" placeholder="Enter your username">
-        <br>
-        Password*: <input type="password" name="password" id="password">
+    <div class="main-card">
+        <h1>Create Account</h1>
         <hr>
-        First name: <input type="text" name="First" id="First">
-        <hr>
-        Last name: <input type="text" name="Last" id="Last">
-        <hr>
-        Email: <input type="text" name="Email" id="Email">
-        <hr>
-        Phone: <input type="text" name="Phone" id="Phone">
-        <hr>
-        <button type="button" id="create-button">Create</button>
-        <button type="reset">Reset</button>
-    </form>
+        Text boxes with an asterisk are required. Others are optional.
+        <form id="create-account-form">
+            Username*: <input type="text" name="username" id="username" placeholder="Enter your username">
+            <br>
+            Password*: <input type="password" name="password" id="password">
+            <hr>
+            First name: <input type="text" name="First" id="First">
+            <hr>
+            Last name: <input type="text" name="Last" id="Last">
+            <hr>
+            Email: <input type="text" name="Email" id="Email">
+            <hr>
+            Phone: <input type="text" name="Phone" id="Phone">
+            <hr>
+            <button type="button" id="create-button">Create</button>
+            <button type="reset">Reset</button>
+        </form>
+    </div>
 
     <!-- Include the Axios library -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
