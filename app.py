@@ -54,6 +54,11 @@ def edition(name=None):
 def ocean(name=None):
     return render_template('Ocean.html', name=name)
 
+@app.route('/bottlehistory')
+#Opens the bottlehistory page
+def bottlehistory(name=None):
+    return render_template('BottleHistory.html', name=name)
+
 
 # Route to handle the login API (similar to the previous example)
 @app.route('/api/login', methods=['POST'])
