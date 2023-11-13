@@ -68,7 +68,7 @@
             const modalBody = document.getElementById("replies-content");
             modalBody.innerHTML = ""; // clean box
             replies.forEach(reply => {
-                modalBody.innerHTML += `<p>${reply.content}</p>`;
+                modalBody.innerHTML += `<p>${reply.reply_content}</p>`;
             });
             $('#repliesModal').modal('show');
         }).catch(error => {

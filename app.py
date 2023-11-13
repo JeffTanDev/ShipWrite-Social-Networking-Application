@@ -191,17 +191,18 @@ def get_dropped_bottles():
     data = request.get_json()
     
     if data['time']:
-        cut_off_time = data['time']
+        requested_time_tz_format = datetime.strptime(data['time'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        cut_off_time = requested_time_tz_format.strftime('%y-%m-%d %H:%M:%S')
     else:
-        cut_off_time = datetime.utcnow()
+        cut_off_time = datetime.strftime(datetime.now(), '%y-%m-%d %H:%M:%S')
 
     # Get up to 10 bottles dropped by the user
     # cut_off_time is in place so that if the user has 10+ messages we load the first ten and then
     # if it is requested to load more hit the route again but set the cut_off_time to be that of the oldest curently held message
     dropped_bottles = database.select_from_db('ocean_messages', 
-                                              {'fields:': ['ocean_messageID', 'time_sent', 'message_content'], 
+                                              {'fields': ['ocean_messageID', 'time_sent', 'message_content'], 
                                                'formatting': 
-                                               f"WHERE user_ID = {current_userID} AND time_sent <= {cut_off_time} ORDER BY time_sent DESC LIMIT 10"})
+                                               f"WHERE user_ID = {current_userID} AND time_sent <='{cut_off_time}' ORDER BY time_sent DESC LIMIT 10"})
     
     if dropped_bottles:
         return jsonify({"dropped_bottles": dropped_bottles}), 200
@@ -235,10 +236,10 @@ def view_bottle_replies(messageID):
     # Get up to 10 replies on a particular bottle
     # cut_off_time is in place so that if the bottle has 10+ replies we load the first ten and then
     # if it is requested to load more hit the route again but set the cut_off_time to be that of the oldest curently held message
-    bottle_replies = database.select_from_db('ocean_messages_replies', 
-                                              {'fields:': ['replyID', 'content', 'time_added'], 
+    bottle_replies = database.select_from_db('ocean_message_replies', 
+                                              {'fields': ['replyID', 'content', 'time_added'], 
                                                'formatting': 
-                                               f"WHERE ocean_messageID = {messageID} AND time_sent <= {cut_off_time} ORDER BY time_sent DESC LIMIT 10"})
+                                               f"WHERE ocean_messageID = {messageID} AND time_added <='{cut_off_time}' ORDER BY time_added DESC LIMIT 10"})
 
     if bottle_replies:
         return jsonify({"bottle_replies": bottle_replies}), 200

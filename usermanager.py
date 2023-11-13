@@ -81,11 +81,13 @@ class UserManager():
 
         stored_info = self.database.select_from_db('user_info', {'fields': [
             'password', 'password_salt'], 'formatting': f'WHERE username = "{username}"'})
+        if stored_info:
+            rehashed_password = bcrypt.hashpw(
+                password.encode('utf-8'), stored_info[0][1].encode('utf-8'))
 
-        rehashed_password = bcrypt.hashpw(
-            password.encode('utf-8'), stored_info[0][1].encode('utf-8'))
-
-        return rehashed_password.decode("utf-8") == stored_info[0][0]
+            return rehashed_password.decode("utf-8") == stored_info[0][0]
+        else:
+            return False
 
     def check_username(self, username: str) -> bool:
         """
