@@ -115,10 +115,12 @@
                 content: replyMessage
             }).then(response => {
                 console.log(response.data);
-                // todo: show reply success
+                // show reply success
+                displayMessage("drop-message-display", "Message reply successfully!", "success");
             }).catch(error => {
                 console.error("Error sending reply: ", error);
-                // todoL show reply wrong
+                // show reply wrong
+                displayMessage("drop-message-display", "Failed to reply the message.", "error");
             });
         }
 
@@ -126,8 +128,6 @@
         $('#bottleModal').modal('hide');
     });
 
-</script>
-<script>
     document.getElementById("drop-button").addEventListener("click", function() {
         var messageContent = document.getElementById("message-textbox").value;
         axios.post('/api/bottlemessages/send', {
@@ -149,13 +149,6 @@
         setTimeout(function() { messageBox.style.display = "none"; }, 1500);
     }
 
-    function toggleoverlay(on) {
-        var overlay = document.getElementsByClassName("overlay");
-        for (var i = 0; i < overlay.length; i++) {
-            overlay[i].style.opacity = on ? '1.0' : '0.0';
-            overlay[i].style.pointerEvents = on ? 'all' :'none';
-        }
-    }
 </script>
 
 <script>
