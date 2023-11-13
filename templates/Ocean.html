@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/Ocean.css">
     <title>Ocean Drift Bottles</title>
 </head>
@@ -39,11 +40,36 @@
     </div>
     <div id="shoreline">
     </div>
+
+    <div class="modal fade" id="bottleModal" tabindex="-1" role="dialog" aria-labelledby="bottleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bottleModalLabel">Bottle Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Show Message -->
+                    <p id="bottleMessage"></p>
+                    <!-- Reply TextArea -->
+                    <textarea id="reply-textbox" class="form-control" placeholder="Enter your reply here..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="reply-button">Reply</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="../static/Interceptor.js"></script>
-<script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+<script>
     document.getElementById("get-button").addEventListener("click", function () {
         axios({
             url: '/api/bottlemessages',
@@ -51,40 +77,55 @@
         }).then(result => {
             console.log(result.data);
             let message_content = result.data.message_content;
-            let bottle = createBottle(message_content);
-            shoreline.prepend(bottle);
+            let message_id = result.data.message_ID;
+            let bottle = createBottle(message_content, message_id);
+            document.getElementById("shoreline").prepend(bottle);
         }).catch(error => {
             console.error("Error fetching message: ", error);
-            let bottle = createBottle("The note is blank...");
-            shoreline.appendChild(bottle);
+            let bottle = createBottle("The note is blank...", null);
+            document.getElementById("shoreline").appendChild(bottle);
         });
     });
 
-    document.onkeydown = function(e) {
-        e = e || window.event;
-        if (e.key === "Escape" || e.key === "Esc") {
-            toggleoverlay(false)
-        }
-    }
-
-    function createBottle(message) {
+    function createBottle(message, messageID) {
         var bottle = document.createElement("div");
         bottle.classList.add("bottle");
         bottle.innerHTML = "<img src=\"../static/images/bottle.png\" alt=\"bottle\" class=\"bottle-icon\">";
 
         bottle.addEventListener("click", function() {
             console.log("Bottle clicked with message: ", message);
-            displaybottle("main-note", message); 
-            toggleoverlay(true);
-            bottle.remove();
+
+            // show message in the modal, and record messageID
+            document.getElementById("bottleMessage").innerText = message;
+            document.getElementById("reply-button").setAttribute("data-message-id", messageID);
+
+            // show modal
+            $('#bottleModal').modal('show');
         });
         return bottle;
     }
 
-    function displaybottle(elementId, message) {
-        var bottleBox = document.getElementById(elementId);
-        bottleBox.innerText = message;
-    }
+    // Set Reply button
+    document.getElementById("reply-button").addEventListener("click", function() {
+        var replyMessage = document.getElementById("reply-textbox").value;
+        var messageID = this.getAttribute("data-message-id");
+
+        // post request
+        if (messageID) {
+            axios.post('/api/bottlemessage/' + messageID + '/addreply', {
+                content: replyMessage
+            }).then(response => {
+                console.log(response.data);
+                // todo: show reply success
+            }).catch(error => {
+                console.error("Error sending reply: ", error);
+                // todoL show reply wrong
+            });
+        }
+
+        // close modal
+        $('#bottleModal').modal('hide');
+    });
 
 </script>
 <script>
