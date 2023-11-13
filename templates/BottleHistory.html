@@ -42,6 +42,7 @@
             time: lastLoadedTime
         }).then(response => {
             displayBottles(response.data.dropped_bottles);
+            console.log(response.data)
         }).catch(error => {
             console.error("Error fetching bottle history: ", error);
         });

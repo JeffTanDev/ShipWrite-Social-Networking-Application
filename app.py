@@ -1,11 +1,11 @@
 from flask import Flask
 from flask import request, url_for, redirect, Blueprint, flash, jsonify, make_response
 from flask import render_template
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, create_refresh_token
 from database import DataBase
 from usermanager import UserManager
 from decouple import config
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # will eventually help connect the different pages
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -14,6 +14,8 @@ app = Flask(__name__)
 # app.config['JWT_SECRET_KEY'] = config('JWT_KEY')
 app.config['JWT_SECRET_KEY'] = config(
     'JWT_KEY', default='YourDefaultSecretKey')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=15)
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
 jwt = JWTManager(app)
 database = DataBase()
 usermanager = UserManager(database)
@@ -54,10 +56,20 @@ def edition(name=None):
 def ocean(name=None):
     return render_template('Ocean.html', name=name)
 
+
 @app.route('/bottlehistory')
-#Opens the bottlehistory page
+# Opens the bottlehistory page
 def bottlehistory(name=None):
     return render_template('BottleHistory.html', name=name)
+
+
+@app.route('/api/token/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    current_userID = get_jwt_identity()
+    new_access_token = create_access_token(identity=current_userID)
+    new_refresh_token = create_refresh_token(identity=current_userID)
+    return jsonify(access_token=new_access_token, refresh_token=new_refresh_token), 200
 
 
 # Route to handle the login API (similar to the previous example)
@@ -71,7 +83,8 @@ def login():
             "formatting": f"WHERE username ='{data['username']}'"
         })
         access_token = create_access_token(identity=user_info[0][0])
-        return jsonify(access_token=access_token), 200
+        refresh_token = create_refresh_token(identity=user_info[0][0])
+        return jsonify(access_token=access_token, refresh_token=refresh_token), 200
     else:
         return jsonify({"error": "Username or password incorrect"}), 400
 
@@ -79,7 +92,7 @@ def login():
 @app.route('/api/updateuserinfo', methods=['POST'])
 @jwt_required()
 def update_user_info():
-    current_userID= get_jwt_identity()  # get current user name
+    current_userID = get_jwt_identity()  # get current user name
     data = request.get_json()
 
     # update dictionary
@@ -158,10 +171,10 @@ def send_message():
 
     # Get Insert Query Ready
     message_data = {
-            "user_id": current_userID,
-            "time_sent": datetime.utcnow(),
-            "message_content": message_content
-            }
+        "user_id": current_userID,
+        "time_sent": datetime.utcnow(),
+        "message_content": message_content
+    }
 
     # save bottle to database
     if database.insert_into_db("ocean_messages", message_data):
@@ -177,8 +190,9 @@ def get_bottle_message():
     current_userID = get_jwt_identity()
 
     if message:
-        message_id = message[0] 
-        database.insert_into_db('viewed_ocean_messages', {'ocean_messageID': message_id, 'user_ID': current_userID, 'time_viewed': datetime.utcnow()})
+        message_id = message[0]
+        database.insert_into_db('viewed_ocean_messages', {'ocean_messageID': message_id, 'user_ID': current_userID,
+                                                          'time_viewed': datetime.utcnow()})
         return jsonify({"message_content": message[4], "message_ID": message[0]}), 200
     else:
         return jsonify({"error": "No messages found"}), 404
@@ -189,7 +203,7 @@ def get_bottle_message():
 def get_dropped_bottles():
     current_userID = get_jwt_identity()
     data = request.get_json()
-    
+
     if data['time']:
         requested_time_tz_format = datetime.strptime(data['time'], '%Y-%m-%dT%H:%M:%S.%fZ')
         cut_off_time = requested_time_tz_format.strftime('%y-%m-%d %H:%M:%S')
@@ -199,35 +213,37 @@ def get_dropped_bottles():
     # Get up to 10 bottles dropped by the user
     # cut_off_time is in place so that if the user has 10+ messages we load the first ten and then
     # if it is requested to load more hit the route again but set the cut_off_time to be that of the oldest curently held message
-    dropped_bottles = database.select_from_db('ocean_messages', 
-                                              {'fields': ['ocean_messageID', 'time_sent', 'message_content'], 
-                                               'formatting': 
-                                               f"WHERE user_ID = {current_userID} AND time_sent <='{cut_off_time}' ORDER BY time_sent DESC LIMIT 10"})
-    
+    dropped_bottles = database.select_from_db('ocean_messages',
+                                              {'fields': ['ocean_messageID', 'time_sent', 'message_content'],
+                                               'formatting':
+                                                   f"WHERE user_ID = {current_userID} AND time_sent <='{cut_off_time}' ORDER BY time_sent DESC LIMIT 10"})
+
     if dropped_bottles:
         return jsonify({"dropped_bottles": dropped_bottles}), 200
     else:
         return jsonify({"error": "No bottles dropped so far!"}), 400
-    
+
 
 @app.route('/api/bottlemessage/<messageID>/addreply', methods=['POST'])
 @jwt_required()
 def add_bottle_reply(messageID):
     current_userID = get_jwt_identity()
     data = request.get_json()
-    
-    reply_inserted = database.insert_into_db('ocean_message_replies', 
-                                             {'ocean_messageID': messageID, 'user_ID': current_userID, 'content': data['content'], 'time_added': datetime.utcnow()})
+
+    reply_inserted = database.insert_into_db('ocean_message_replies',
+                                             {'ocean_messageID': messageID, 'user_ID': current_userID,
+                                              'content': data['content'], 'time_added': datetime.utcnow()})
 
     if reply_inserted:
         return jsonify({"message": "Reply added sucessfully!"}), 200
     else:
         return jsonify({"message": "There was an error adding the reply, please try again."}), 400
 
+
 @app.route('/api/bottlemessage/<messageID>/replies', methods=['POST'])
 def view_bottle_replies(messageID):
     data = request.get_json()
-    
+
     if data['time']:
         cut_off_time = data['time']
     else:
@@ -236,15 +252,16 @@ def view_bottle_replies(messageID):
     # Get up to 10 replies on a particular bottle
     # cut_off_time is in place so that if the bottle has 10+ replies we load the first ten and then
     # if it is requested to load more hit the route again but set the cut_off_time to be that of the oldest curently held message
-    bottle_replies = database.select_from_db('ocean_message_replies', 
-                                              {'fields': ['replyID', 'content', 'time_added'], 
-                                               'formatting': 
-                                               f"WHERE ocean_messageID = {messageID} AND time_added <='{cut_off_time}' ORDER BY time_added DESC LIMIT 10"})
+    bottle_replies = database.select_from_db('ocean_message_replies',
+                                             {'fields': ['replyID', 'content', 'time_added'],
+                                              'formatting':
+                                                  f"WHERE ocean_messageID = {messageID} AND time_added <='{cut_off_time}' ORDER BY time_added DESC LIMIT 10"})
 
     if bottle_replies:
         return jsonify({"bottle_replies": bottle_replies}), 200
     else:
         return jsonify({"error": "No replies so far!"}), 400
+
 
 if __name__ == '__main__':
     app.run()

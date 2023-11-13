@@ -47,6 +47,8 @@
                 // Store the access_token in the localStorage
                 localStorage.removeItem('access_token');
                 localStorage.setItem('access_token', result.data.access_token);
+                localStorage.removeItem('refresh_token');
+                localStorage.setItem('refresh_token', result.data.refresh_token);
                 window.location.href = `/homepage`;
             }).catch(error => {
                 alert("Username or password incorrect");

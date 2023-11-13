@@ -1,3 +1,24 @@
+function refreshToken() {
+    return new Promise((resolve, reject) => {
+        const refresh_token = localStorage.getItem('refresh_token');
+        axios.post('/api/token/refresh', {}, {
+            headers: { 'Authorization': 'Bearer ' + refresh_token }
+        }).then(response => {
+            if (response.data.access_token) {
+                localStorage.setItem('access_token', response.data.access_token);
+                localStorage.setItem('refresh_token', response.data.refresh_token);
+                resolve(response.data.access_token);
+            } else {
+                reject('Failed to refresh token');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            window.location.href = '/login'; // Redirect to login page
+        });
+    });
+}
+
+
 //Axios interceptor to attach the JWT to every request
 console.log("Setting up interceptors...");
 axios.interceptors.request.use(function (config) {
@@ -8,5 +29,17 @@ axios.interceptors.request.use(function (config) {
     }
     return config;
 }, function (error) {
+    return Promise.reject(error);
+});
+
+axios.interceptors.response.use(response => response, error => {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        return refreshToken().then(newToken => {
+            originalRequest.headers.Authorization = 'Bearer ' + newToken;
+            return axios(originalRequest);
+        });
+    }
     return Promise.reject(error);
 });
