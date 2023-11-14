@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = config(
     'JWT_KEY', default='YourDefaultSecretKey')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=15)
-app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(minutes=30)
 jwt = JWTManager(app)
 database = DataBase()
 usermanager = UserManager(database)
