@@ -79,13 +79,11 @@ class UserManager():
             bool: True if the password is correct; False otherwise.
         """
 
-        stored_info = self.database.select_from_db('user_info', {'fields': [
-            'password', 'password_salt'], 'formatting': f'WHERE username = "{username}"'})
+        stored_info = self.database.read_from_db('user_info', {'fields': ['password', 'password_salt'], 'formatting': f'WHERE username = "{username}"'})
+        
         if stored_info:
-            rehashed_password = bcrypt.hashpw(
-                password.encode('utf-8'), stored_info[0][1].encode('utf-8'))
-
-            return rehashed_password.decode("utf-8") == stored_info[0][0]
+            rehashed_password = bcrypt.hashpw(password.encode('utf-8'), stored_info[0]['password_salt'].encode('utf-8'))
+            return rehashed_password.decode("utf-8") == stored_info[0]['password']
         else:
             return False
 
@@ -100,7 +98,7 @@ class UserManager():
             bool: True if the username exists in the database; False otherwise.
         """
 
-        query_result = self.database.select_from_db('user_info', {'fields': [
+        query_result = self.database.read_from_db('user_info', {'fields': [
             'username'], 'formatting': f'WHERE username = "{username}"'})
         return True if query_result else False
 

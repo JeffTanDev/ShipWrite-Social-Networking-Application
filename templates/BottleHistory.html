@@ -54,7 +54,7 @@
             bottles.forEach(bottle => {
                 const bottleBtn = document.createElement("button");
                 bottleBtn.className = "bottle-btn";
-                bottleBtn.innerText = bottle[2];
+                bottleBtn.innerText = bottle.message_content;
                 bottleBtn.onclick = () => showReplies(bottle.ocean_messageID);
                 container.appendChild(bottleBtn);
             });
