@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <title>Document</title>
 </head>
 <body>
+    <h1>Bottles you have dropped to the Ocean:</h1>
+    <br><br>
     <div id="bottles-container">
         <!-- bottle message will display here -->
     </div>
@@ -50,15 +53,16 @@
 
     // display bottle history
     function displayBottles(bottles) {
-            const container = document.getElementById("bottles-container");
-            bottles.forEach(bottle => {
-                const bottleBtn = document.createElement("button");
-                bottleBtn.className = "bottle-btn";
-                bottleBtn.innerText = bottle.message_content;
-                bottleBtn.onclick = () => showReplies(bottle.ocean_messageID);
-                container.appendChild(bottleBtn);
-            });
-        }
+        const container = document.getElementById("bottles-container");
+        bottles.forEach(bottle => {
+            const bottleBtn = document.createElement("button");
+            bottleBtn.className = "bottle-btn";
+            bottleBtn.innerText = bottle.message_content;
+            bottleBtn.onclick = () => showReplies(bottle.ocean_messageID);
+            container.appendChild(bottleBtn);
+            container.appendChild(document.createElement("br"));
+        });
+    }
 
     // display reply
     function showReplies(messageID) {
@@ -68,11 +72,19 @@
             const replies = response.data.bottle_replies;
             const modalBody = document.getElementById("replies-content");
             modalBody.innerHTML = ""; // clean box
-            replies.forEach(reply => {
-                modalBody.innerHTML += `<p>${reply.reply_content}</p>`;
-            });
+            if (replies.length > 0) {
+                replies.forEach(reply => {
+                    modalBody.innerHTML += `<p>${reply.reply_content}</p>`;
+                });
+            } else {
+                modalBody.innerHTML = "<p>No reply</p>";
+            }
             $('#repliesModal').modal('show');
         }).catch(error => {
+            const modalBody = document.getElementById("replies-content");
+            modalBody.innerHTML = ""; // clean box
+            modalBody.innerHTML = "<p>No reply</p>";
+            $('#repliesModal').modal('show');
             console.error("Error fetching replies: ", error);
         });
     }
