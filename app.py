@@ -163,13 +163,13 @@ def get_user_info():
     else:
         return jsonify(error="User not found"), 404
 
+"""
 @app.route('/api/extrovertmode', methods=['GET'])
 @jwt_required()
 def extrovertmode():
-    global extrovertmode_state
     extrovertmode_state = not extrovertmode_state
-    return jsonify('status': 'success', isopen =  extrovertmode_state), 200
-
+    return jsonify('status': 'success', isopen=extrovertmode_state), 200
+"""
 
 @app.route('/api/bottlemessages/send', methods=['POST'])
 @jwt_required()

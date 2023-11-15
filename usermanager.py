@@ -125,7 +125,7 @@ class UserManager():
         except mysql.connector.Error() as e:
             print(f'Error: {e}')
     
-    def create_friendship(self, requesterID: int, recieverID: int) -> bool | None:
+    def create_friendship(self, requesterID: int, recieverID: int) -> bool:
         """
         Create record in the database table with the provided data.
 
@@ -146,7 +146,7 @@ class UserManager():
         return self.database._execute_db_modification(new_friendship_query, values)
     
 
-    def delete_friendship(self, userID: int, friendID: int) -> bool | None:
+    def delete_friendship(self, userID: int, friendID: int) -> bool:
         """
         Remove records in the database table with the provided data.
 
@@ -165,7 +165,7 @@ class UserManager():
         return self.database._execute_db_modification(accept_friendship_query)
 
 
-    def accept_friend_request(self, userID: int, friendID: int) -> bool | None:
+    def accept_friend_request(self, userID: int, friendID: int) -> bool:
         """
         Update record in the database table with the provided data.
 
@@ -183,7 +183,7 @@ class UserManager():
         return self.database._execute_db_modification(accept_friendship_query)
 
 
-    def decline_friend_request(self, userID: int, friendID: int) -> bool | None:
+    def decline_friend_request(self, userID: int, friendID: int) -> bool:
         """
         Update record in the database table with the provided data.
 

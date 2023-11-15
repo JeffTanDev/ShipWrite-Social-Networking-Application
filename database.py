@@ -107,7 +107,7 @@ class DataBase:
         update_query = f"UPDATE {table_name} SET {update_k_v_pairs} {formatting}"
         return self._execute_db_modification(update_query)
 
-    def update_times_viewed(self, ocean_messageID: int) -> bool | None:
+    def update_times_viewed(self, ocean_messageID: int) -> bool:
         update_query = f"UPDATE ocean_messages SET times_viewed=times_viewed + 1 WHERE ocean_messageID={ocean_messageID}"
         return self._execute_db_modification(update_query)
 
@@ -126,10 +126,10 @@ class DataBase:
         """
 
         select_formatting = f"LEFT JOIN viewed_ocean_messages vom ON om.ocean_messageID=vom.ocean_messageID WHERE om.user_id != {user_id}\
-                            and om.ocean_messageID NOT IN (SELECT DISTINCT ocean_messageID FROM viewed_ocean_messages WHERE user_ID= {user_id})\
+                            AND om.ocean_messageID NOT IN (SELECT DISTINCT ocean_messageID FROM viewed_ocean_messages WHERE user_ID= {user_id})\
                             GROUP BY om.ocean_messageID ORDER BY times_viewed DESC LIMIT 100;"
 
-        ocean_bottles = self.read_from_db('ocean_messages om', {'fields': ['om.*'], 'formatting': f"{select_formatting}"})
+        ocean_bottles = self.read_from_db('ocean_messages om', {'fields': ['om.*, vom.time_viewed'], 'formatting': f"{select_formatting}"})
 
         if not ocean_bottles:
             return None
@@ -144,7 +144,11 @@ class DataBase:
             # Find the time the bottle was last viewed
             # Don't use time_sent because that is the overall age of the bottle and could be days/weeks/months
             time_stamp_from_db = bottle['time_viewed']
-            age_minutes = (datetime.utcnow() - time_stamp_from_db).total_seconds() / 60
+            
+            if time_stamp_from_db:
+                age_minutes = (datetime.utcnow() - time_stamp_from_db).total_seconds() / 60
+            else:
+                age_minutes = 0
 
             if age_minutes != 0:
                 selected_chance += age_minutes / 360
