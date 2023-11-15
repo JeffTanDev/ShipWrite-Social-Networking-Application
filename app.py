@@ -100,8 +100,7 @@ def update_user_info():
     data = request.get_json()
 
     # update dictionary
-    fields_to_update = {k: v for k, v in data.items() if k in ["first_name", "last_name", "email", "phone", "password"]}
-
+    fields_to_update = {k: v for k, v in data.items() if k in ["first_name", "last_name", "email", "phone", "password"] and v != ''}
     if not fields_to_update:
         return jsonify({"error": "No valid fields provided for update"}), 400
 
@@ -178,6 +177,9 @@ def send_message():
     message_content = data.get('message')
     current_userID = get_jwt_identity()
 
+    if message_content == None or message_content == '':
+        return jsonify({"error": "You left the message blank!"}), 400
+
     # Get Insert Query Ready
     message_data = {
         "user_id": current_userID,
@@ -189,7 +191,7 @@ def send_message():
     if database.insert_into_db("ocean_messages", message_data):
         return jsonify({"message": "Message sent successfully"}), 200
     else:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"error": "there was a problem dropping your message"}), 404
 
 
 @app.route('/api/bottlemessages', methods=['GET'])
@@ -245,6 +247,9 @@ def add_bottle_reply(messageID):
     current_userID = get_jwt_identity()
     data = request.get_json()
     
+    if data['content'] == None or data['content'] == '':
+        return jsonify({"message": "There was an error adding the reply, please don't submit blank responses."}), 400
+
     reply_inserted = database.insert_into_db('ocean_message_replies', 
                                              {'ocean_messageID': messageID, 'user_ID': current_userID, 'reply_content': data['content'], 'time_added': datetime.utcnow()})
 
