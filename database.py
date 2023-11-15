@@ -140,7 +140,10 @@ class DataBase:
             selected_chance = 1.0
             views = bottle['times_viewed']
             selected_chance *= 1/ (views + 1)
-            time_stamp_from_db = bottle['time_sent']
+
+            # Find the time the bottle was last viewed
+            # Don't use time_sent because that is the overall age of the bottle and could be days/weeks/months
+            time_stamp_from_db = bottle['time_viewed']
             age_minutes = (datetime.utcnow() - time_stamp_from_db).total_seconds() / 60
 
             if age_minutes != 0:

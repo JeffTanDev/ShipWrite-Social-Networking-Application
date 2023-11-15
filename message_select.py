@@ -22,14 +22,7 @@ def select_message():
     # Query the database for up to 100 messages and order them by the number of times viewed 
     # That is not also written by the current user
 
-    '''
-    if ocean_messages empty(No unviewed messages):
-        query = "SELECT * FROM viewed_ocean_messages\
-                WHERE NOT user_id = 'current_userID'\
-                ORDER times_viewed\
-                LIMIT 100;"
-    else:
-    '''
+    
     query = "SELECT * FROM ocean_messages\
             WHERE NOT user_id = 'current_userID'\
             ORDER times_viewed\
