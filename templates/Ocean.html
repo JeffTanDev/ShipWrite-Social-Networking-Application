@@ -80,7 +80,7 @@
             let bottle = createBottle(message_content, message_id);
             document.getElementById("shoreline").prepend(bottle);
         }).catch(error => {
-            console.error("Error fetching message: ", error);
+            console.error("Error fetching message: ", error.response.data.error);
             let bottle = createBottle("The note is blank...", null);
             document.getElementById("shoreline").appendChild(bottle);
         });
@@ -100,6 +100,7 @@
 
             // show modal
             $('#bottleModal').modal('show');
+            bottle.remove();
         });
         return bottle;
     }
@@ -118,9 +119,9 @@
                 // show reply success
                 displayMessage("drop-message-display", "Message reply successfully!", "success");
             }).catch(error => {
-                console.error("Error sending reply: ", error);
+                console.error("Error sending reply: ", error.response.data.error);
                 // show reply wrong
-                displayMessage("drop-message-display", "Failed to reply the message.", "error");
+                displayMessage("drop-message-display", `${error.response.data.error}`, "error");
             });
         }
 
@@ -136,8 +137,8 @@
             console.log(response.data);
             displayMessage("drop-message-display", "Message dropped successfully!", "success");
         }).catch(error => {
-            console.error("Error sending message: ", error);
-            displayMessage("drop-message-display", "Failed to drop the message.", "error");
+            console.error("Error sending message: ", error.response.data.error);
+            displayMessage("drop-message-display", `${error.response.data.error}`, "error");
         });
     });
 
