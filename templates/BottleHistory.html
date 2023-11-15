@@ -74,7 +74,20 @@
             modalBody.innerHTML = ""; // clean box
             if (replies.length > 0) {
                 replies.forEach(reply => {
-                    modalBody.innerHTML += `<p>${reply.reply_content}</p>`;
+                    // Create paragraph for reply content
+                    const replyPara = document.createElement('p');
+                    replyPara.innerText = reply.reply_content;
+                    modalBody.appendChild(replyPara);
+
+                    // Create Request Friend button
+                    const friendButton = document.createElement('button');
+                    friendButton.className = 'btn btn-primary'; // Bootstrap button class
+                    friendButton.innerText = 'Request Friend';
+                    friendButton.onclick = function() {
+                        // Add your logic for friend request here
+                        console.log('Friend request sent for reply:', reply.reply_content);
+                    };
+                    modalBody.appendChild(friendButton);
                 });
             } else {
                 modalBody.innerHTML = "<p>No reply</p>";
