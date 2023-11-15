@@ -83,11 +83,12 @@ def login():
 
     if usermanager.check_password(data['password'], data['username']):
         user_info = database.read_from_db("user_info", {
-            "fields": ["user_id"],
+            "fields": ["user_id", "mode"],
             "formatting": f"WHERE username ='{data['username']}'"
         })
         access_token = create_access_token(identity=user_info[0]['user_id'])
         refresh_token = create_refresh_token(identity=user_info[0]['user_id'])
+        social_mode = user_info[0]['mode']
         return jsonify(access_token=access_token, refresh_token=refresh_token), 200
     else:
         return jsonify({"error": "Username or password incorrect"}), 400
@@ -96,7 +97,7 @@ def login():
 @app.route('/api/updateuserinfo', methods=['POST'])
 @jwt_required()
 def update_user_info():
-    current_userID = get_jwt_identity()  # get current user name
+    current_userID = get_jwt_identity()  # get current userID
     data = request.get_json()
 
     # update dictionary
@@ -273,7 +274,7 @@ def view_bottle_replies(messageID):
     # cut_off_time is in place so that if the bottle has 10+ replies we load the first ten and then
     # if it is requested to load more hit the route again but set the cut_off_time to be that of the oldest curently held message
     bottle_replies = database.read_from_db('ocean_message_replies', 
-                                              {'fields': ['replyID', 'reply_content', 'time_added'], 
+                                              {'fields': ['replyID', 'user_ID', 'reply_content', 'time_added'], 
                                                'formatting': 
                                                f"WHERE ocean_messageID = {messageID} AND time_added <'{cut_off_time}' ORDER BY time_added DESC LIMIT 10"})
 
