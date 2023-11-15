@@ -202,6 +202,7 @@ def get_bottle_message():
 
         return jsonify({"message_content": message['message_content'], "message_ID": message_id}), 200
     else:
+        print("NO messages found in the Ocean, try it later!")
         return jsonify({"error": "No messages found"}), 404
 
 
