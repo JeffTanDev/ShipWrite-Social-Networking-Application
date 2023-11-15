@@ -113,8 +113,21 @@ class DataBase:
 
 
     def select_ocean_bottle(self, user_id):
-        
-        select_formatting = f"LEFT JOIN viewed_ocean_messages vom ON om.ocean_messageID=vom.ocean_messageID WHERE om.user_id != {user_id} and om.ocean_messageID NOT IN (SELECT DISTINCT ocean_messageID FROM viewed_ocean_messages WHERE user_ID= {user_id}) GROUP BY om.ocean_messageID ORDER BY times_viewed DESC LIMIT 100;"
+        """
+        Select a bottle from the ocean with weighted chance.
+
+        Args:
+            user_id: The current user's ID, so we don't return a user's own bottle
+
+        Returns:
+            list: The list of values from the database associated with the message
+
+        IMPORTANT:
+        """
+
+        select_formatting = f"LEFT JOIN viewed_ocean_messages vom ON om.ocean_messageID=vom.ocean_messageID WHERE om.user_id != {user_id}\
+                            and om.ocean_messageID NOT IN (SELECT DISTINCT ocean_messageID FROM viewed_ocean_messages WHERE user_ID= {user_id})\
+                            GROUP BY om.ocean_messageID ORDER BY times_viewed DESC LIMIT 100;"
 
         ocean_bottles = self.read_from_db('ocean_messages om', {'fields': ['om.*'], 'formatting': f"{select_formatting}"})
 
