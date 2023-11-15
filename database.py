@@ -1,5 +1,6 @@
 import mysql.connector
 from datetime import datetime
+from usermanager import UserManager
 from connection_pool import ConnectionPool
 import random
 
@@ -45,11 +46,6 @@ class DataBase:
         Returns:
             bool: True if the insertion is successful, False otherwise.
 
-        This function retrieves a database connection from the connection pool, constructs an
-        INSERT SQL statement based on the provided table name and data, and executes the insertion.
-        If successful, it commits the transaction and returns True. If an error occurs during
-        the insertion process, it returns False and logs the error message.
-
         Example: insert_into_db("user_info", {'first_name': 'Jesse', 'last_name': 'Baxter' ... etc})
 
         """
@@ -71,11 +67,6 @@ class DataBase:
 
         Returns:
             list or None: A list of dictionaries representing the selected records with the columns being the keys. Returns None if an error occurs.
-
-        This function retrieves a database connection from the connection pool, constructs a SELECT SQL statement
-        based on the provided table name and data, and executes the query to retrieve the specified data.
-        If successful, it returns the selected records as a list of tuples. If an error occurs during the selection process,
-        it returns None and logs the error message.
 
         Example of a call: select_from_db("user_info", {"fields": ["first_name"], "formatting": None})
 
@@ -104,10 +95,6 @@ class DataBase:
         Returns:
             bool: True if the update was successful, False otherwise.
 
-        This method connects to the database using the connection pool, constructs an SQL UPDATE statement
-        based on the provided data, and executes it. If the update is successful, it returns True; otherwise,
-        it returns False.
-
         IMPORTANT:
             - There must be some kind of formatting passed in. You cannot edit a record without narrowing it down on some condition.
               If you do not pass a format string in the modification will change the value in the column for every single record.
@@ -120,18 +107,20 @@ class DataBase:
         update_query = f"UPDATE {table_name} SET {update_k_v_pairs} {formatting}"
         return self._execute_db_modification(update_query)
 
-    def update_times_viewed(self, ocean_messageID: int) -> bool:
-
+    def update_times_viewed(self, ocean_messageID: int) -> bool | None:
         update_query = f"UPDATE ocean_messages SET times_viewed=times_viewed + 1 WHERE ocean_messageID={ocean_messageID}"
         return self._execute_db_modification(update_query)
 
 
     def select_ocean_bottle(self, user_id):
         
-        select_formatting = f"LEFT JOIN (SELECT ocean_messageID, COUNT(*) AS replies_count FROM ocean_message_replies GROUP BY ocean_messageID) omr ON omr.ocean_messageID = om.ocean_messageID WHERE om.user_id != {user_id} GROUP BY om.ocean_messageID ORDER BY om.times_viewed DESC LIMIT 100;"
+        select_formatting = f"LEFT JOIN viewed_ocean_messages vom ON om.ocean_messageID=vom.ocean_messageID WHERE om.user_id != {user_id} and om.ocean_messageID NOT IN (SELECT DISTINCT ocean_messageID FROM viewed_ocean_messages WHERE user_ID= {user_id}) GROUP BY om.ocean_messageID ORDER BY times_viewed DESC LIMIT 100;"
 
-        ocean_bottles = self.read_from_db('ocean_messages om', {'fields': ['om.*', 'IFNULL(SUM(omr.replies_count), 0) AS total_replies'], 'formatting': f"{select_formatting}"})
+        ocean_bottles = self.read_from_db('ocean_messages om', {'fields': ['om.*'], 'formatting': f"{select_formatting}"})
 
+        if not ocean_bottles:
+            return None
+        
         # Will be used for weighted random selection
         raw_bottle_weights = []
         for bottle in ocean_bottles:

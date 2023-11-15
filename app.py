@@ -192,15 +192,11 @@ def get_bottle_message():
     message = database.select_ocean_bottle(current_userID)
 
     if message:
-        message_id = message['ocean_messageID'] 
-        
-        # Essentially transforming this part into an async call to the inserts
-        # Prior to switching to seperate thread get time was an average of 1681 ms over 100 requests
-        # After the change the average get time is about 95 ms over 100 requests
+        message_id = message['ocean_messageID']
+
         def perform_inserts():
             database.insert_into_db('viewed_ocean_messages', {'ocean_messageID': message_id, 'user_ID': current_userID, 'time_viewed': datetime.utcnow()})
             database.update_times_viewed(message_id)
-        
         insert_thread = threading.Thread(target=perform_inserts)
         insert_thread.start()
 
@@ -255,9 +251,10 @@ def view_bottle_replies(messageID):
     data = request.get_json()
 
     if data['time']:
-        cut_off_time = data['time']
+        requested_time_tz_format = datetime.strptime(data['time'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        cut_off_time = requested_time_tz_format.strftime('%y-%m-%d %H:%M:%S')
     else:
-        cut_off_time = datetime.utcnow()
+        cut_off_time = datetime.strftime(datetime.now(), '%y-%m-%d %H:%M:%S')
 
     # Get up to 10 replies on a particular bottle
     # cut_off_time is in place so that if the bottle has 10+ replies we load the first ten and then

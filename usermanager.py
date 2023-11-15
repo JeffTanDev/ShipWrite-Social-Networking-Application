@@ -1,7 +1,7 @@
 import mysql.connector
 import uuid
 import bcrypt
-import datetime
+from datetime import datetime
 
 
 class UserManager():
@@ -102,6 +102,7 @@ class UserManager():
             'username'], 'formatting': f'WHERE username = "{username}"'})
         return True if query_result else False
 
+
     def create_user(self, data: dict) -> bool:
         """
         Create a new user in the user database.
@@ -117,9 +118,84 @@ class UserManager():
         data['password'] = hash_result[0]
         data['password_salt'] = hash_result[1]
         data['uuid'] = uuid.uuid4().hex
-        data['registration_date'] = datetime.datetime.utcnow()
+        data['registration_date'] = datetime.utcnow()
 
         try:
             return self.database.insert_into_db('user_info', data)
         except mysql.connector.Error() as e:
             print(f'Error: {e}')
+    
+    def create_friendship(self, requesterID: int, recieverID: int) -> bool | None:
+        """
+        Create record in the database table with the provided data.
+
+        Args:
+            requesterID (int): ID of person sending request
+            recieverID (int): ID of person getting request
+
+        Creates  requester -> reciever and reciever -> requester rows in friendship table
+        Returns:
+            bool: True if the update was successful, raises an error otherwise.
+        """
+        if not requesterID or not recieverID or requesterID == recieverID:
+            return False
+        
+        new_friendship_query = 'INSERT into friendship(user1_ID, user2_ID, status, creation_date) VALUES(%s, %s, %s, %s), (%s, %s, %s, %s)'
+        # A->B friendship row ends with timestamp, then B->A friendship
+        values = [requesterID, recieverID, "ACCEPTED", datetime.utcnow(), recieverID, requesterID, "PENDING", datetime.utcnow()]
+        return self.database._execute_db_modification(new_friendship_query, values)
+    
+
+    def delete_friendship(self, userID: int, friendID: int) -> bool | None:
+        """
+        Remove records in the database table with the provided data.
+
+        Args:
+            userID (int): ID of person requesting deletion
+            friendID (int): ID of friend getting deleted
+
+        Removes  user -> friend and friend -> user rows in friendship table
+        Returns:
+            bool: True if the update was successful, raises an error otherwise.
+        """
+        if not userID or not friendID or userID == friendID:
+            return False
+        
+        accept_friendship_query = f'DELETE FROM friendship WHERE user1_ID={userID} OR user1_ID={friendID} AND user2_ID={friendID} or user2_ID={userID}'
+        return self.database._execute_db_modification(accept_friendship_query)
+
+
+    def accept_friend_request(self, userID: int, friendID: int) -> bool | None:
+        """
+        Update record in the database table with the provided data.
+
+        Args:
+            userID (int): ID of person accepting request
+            friendID (int): ID of person who sent request
+
+        Returns:
+            bool: True if the update was successful, raises an error otherwise.
+        """
+        if not userID or not friendID or userID == friendID:
+            return False
+        
+        accept_friendship_query = f'UPDATE friendship SET status="ACCEPTED" WHERE user1_id ={userID} AND user2_id={friendID}'
+        return self.database._execute_db_modification(accept_friendship_query)
+
+
+    def decline_friend_request(self, userID: int, friendID: int) -> bool | None:
+        """
+        Update record in the database table with the provided data.
+
+        Args:
+            userID (int): ID of person accepting request
+            friendID (int): ID of person who sent request
+
+        Removes friendship from table
+        Returns:
+            bool: True if the update was successful, raises an error otherwise.
+        """
+        if not userID or not friendID or userID == friendID:
+            return False
+        
+        return self.database.delete_friendship(userID, friendID)
