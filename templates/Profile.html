@@ -50,8 +50,8 @@
             document.getElementById('firstname').textContent = result.data.first_name || 'N/A';
             document.getElementById('lastname').textContent = result.data.last_name || 'N/A';
         }).catch(error => {
-            console.error("Error fetching user info: ", error);
-            alert("Failed to load user profile.");
+            console.error("Error fetching user info: ", error.response.data.error);
+            alert(`${error.response.data.error}`);
         });
     </script>
     <script>

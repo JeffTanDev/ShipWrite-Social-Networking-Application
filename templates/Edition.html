@@ -92,7 +92,7 @@
                 document.getElementById('password').value = userInfo.last_name;
             })
             .catch(function (error) {
-                console.error("Error fetching user info:", error);
+                console.error("Error fetching user info:", error.response.data.error);
             });
         }
 
@@ -112,11 +112,7 @@
                     setTimeout(function() { window.location.href = '/profile'; }, 2000);
                 })
                 .catch(function (error) {
-                    if (error.response && error.response.data) {
-                        displayMessage(error.response.data.message, "error");
-                    } else {
-                        displayMessage("An unknown error occurred", "error");
-                    }
+                    displayMessage(error.response.data.error, "error");
                 });
         }
 
