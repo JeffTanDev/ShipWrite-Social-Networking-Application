@@ -44,7 +44,7 @@
             <input type="text" id="lname" name="last_name"><br>
             
             <label for="password">New Password:</label><br>
-            <input type="password" id="password" name="password"><br>
+            <input type="password" id="password" name="password" placeholder="********"><br>
             
             <input type="button" value="Update" onclick="updateUserInfo()">
             <button id="profile-btn">Back</button>
@@ -78,7 +78,6 @@
                 document.getElementById('phone').value = userInfo.phone;
                 document.getElementById('fname').value = userInfo.first_name;
                 document.getElementById('lname').value = userInfo.last_name;
-                document.getElementById('password').value = userInfo.last_name;
             })
             .catch(function (error) {
                 console.error("Error fetching user info:", error.response.data.error);
@@ -91,8 +90,11 @@
                 phone: document.getElementById('phone').value,
                 first_name: document.getElementById('fname').value,
                 last_name: document.getElementById('lname').value,
-                password: document.getElementById('password').value
             };
+
+            if (document.getElementById('password').value != "") {
+                formData.password = document.getElementById('password').value;
+            }
 
             axios.post('/api/updateuserinfo', formData)
                 .then(function (response) {
