@@ -7,25 +7,26 @@
     <title>Profile</title>
     <link rel="stylesheet" href="../static/Standard.css">
     <style>
-        #edition-btn {
-            position: block;
-            margin: -2rem;
-            float: right;
-            height: 5rem;
-            width: 5rem;
-            cursor: pointer;
+        /* Added CSS styles */
+        #settings-btn {
+            position: fixed; /* Fixed position relative to the viewport */
+            top: 10px; /* 10 pixels from the top */
+            right: 10px; /* 10 pixels from the right side */
+            border: none; /* No border */
+            background-color: transparent; /* Transparent background */
+        }
+
+        #settings-btn img {
+            width: 30px; /* Image width */
+            height: 30px; /* Image height */
         }
     </style>
 </head>
 <body>
-    <div id = "back-btn">
-        <img src="../static/images/icons8-ship-wheel-50.png" alt="back button">
-    </div>
-
     <div class="main-card">
-        <div id = "edition-btn">
-            <img src="../static/images/icons8-quill-64.png" alt="back button">
-        </div>
+        <button id="settings-btn">
+            <img src="../static/images/setting.png" alt="Settings" />
+        </button>
         <h1>Profile</h1>
         <hr>
         <strong>Username:</strong> <span id="username"></span><br>
@@ -34,12 +35,6 @@
         <strong>Last Name:</strong> <span id="lastname"></span>
     </div>
 
-    <!-- back button to home page -->
-    <script>
-        document.getElementById("back-btn").addEventListener("click", function() {
-            window.location.href= '/homepage';
-        });
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../static/Interceptor.js"></script>
     <script>
@@ -60,7 +55,7 @@
         });
     </script>
     <script>
-        document.getElementById("edition-btn").addEventListener("click", function() {
+        document.getElementById("settings-btn").addEventListener("click", function() {
             window.location.href= '/edition';
         })
     </script>
