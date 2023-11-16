@@ -117,6 +117,28 @@ def update_user_info():
         return jsonify({"error": "Failed to update user info"}), 500
 
 
+@app.route('/api/updatemode', methods=['POST'])
+@jwt_required()
+def update_user_mode():
+    current_userID = get_jwt_identity()  # Get current userID
+    data = request.get_json()
+
+    # Check if 'mode' is provided in the request
+    if 'mode' not in data or data['mode'] == '':
+        return jsonify({"error": "No mode provided for update"}), 400
+
+    # Prepare the fields to update
+    fields_to_update = {'mode': data['mode']}
+
+    # Update database
+    update_result = database.update_values_in_db("user_info", fields_to_update, f"WHERE user_ID = '{current_userID}'")
+
+    if update_result:
+        return jsonify({"message": "User mode updated successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to update user mode"}), 500
+
+
 # Route to handle the creation of a new account
 @app.route('/api/newaccount', methods=['POST'])
 def create_account():
@@ -145,7 +167,7 @@ def get_user_info():
 
     # Construct the query
     user_data = {
-        "fields": ["username", "first_name", "last_name", "email", "phone"],
+        "fields": ["username", "first_name", "last_name", "email", "phone", "mode"],
         "formatting": f"WHERE user_ID ='{current_userID}'"
     }
 
@@ -159,17 +181,11 @@ def get_user_info():
                        first_name=user_info['first_name'],
                        last_name=user_info['last_name'],
                        email=user_info['email'],
-                       phone=user_info['phone']), 200
+                       phone=user_info['phone'],
+                       mode=user_info['mode']), 200
     else:
         return jsonify(error="User not found"), 404
 
-"""
-@app.route('/api/extrovertmode', methods=['GET'])
-@jwt_required()
-def extrovertmode():
-    extrovertmode_state = not extrovertmode_state
-    return jsonify('status': 'success', isopen=extrovertmode_state), 200
-"""
 
 @app.route('/api/bottlemessages/send', methods=['POST'])
 @jwt_required()
