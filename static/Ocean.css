@@ -196,27 +196,27 @@ textarea {
     cursor: pointer;
 }
 
-
 #back-btn {
     position: absolute;
-    margin: 20px;
-    height: 5vh;
-    width: 5vh;
-    transition: 1.0s ease;
-    animation: bob 2.2s ease-in-out infinite alternate-reverse;
-    animation-play-state: paused;
-    transform-origin: center bottom;
+    margin: 2rem;
+    float: left;
+    left: 0px;
+    height: 5rem;
+    width: 5rem;
+    transition: 2s ease-in-out;
+    cursor: pointer;
 }
+
 
 #back-btn > img{
-    height: 5vh;
+    fill: var(--dark_blue);
+    height: 100%;
+    width: 100%;
 }
 
-#back-btn:hover, #back-btn:focus {
-    cursor: pointer;
-    animation-play-state: running;
+#back-btn:hover {
+    transform: rotate(360deg);
 }
-
 
 @keyframes bob {
     0% {

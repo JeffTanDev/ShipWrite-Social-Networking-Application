@@ -18,58 +18,47 @@
         .error {
             background-color: #cb3032; /* red */
         }
-        #back-btn {
-            position: absolute;
-            margin: 20px;
-            height: 5vh;
-            width: 5vh;
-            transition: 1.0s ease;
-            animation: bob 2.2s ease-in-out infinite alternate-reverse;
-            animation-play-state: paused;
-            transform-origin: center bottom;
-        }
-
-        #back-btn > img{
-            height: 5vh;
-        }
-
-        #back-btn:hover, #back-btn:focus {
-            cursor: pointer;
-            animation-play-state: running;
-        }
     </style>
     
 </head>
 <body>
+    <div id = "back-btn">
+        <img src="../static/images/icons8-ship-wheel-50.png" alt="back button">
+    </div>
     <div class="main-card">
-
+        <!-- back button to home page -->
         <div id="messageBox" style="display:none;"></div>
         <h2>Update Profile</h2>
         
         <form id="updateForm">
             <label for="email">New Email:</label><br>
             <input type="email" id="email" name="email"><br>
-        
+            
             <label for="phone">New Phone:</label><br>
             <input type="text" id="phone" name="phone"><br>
-        
+            
             <label for="fname">New First Name:</label><br>
             <input type="text" id="fname" name="first_name"><br>
-        
+            
             <label for="lname">New Last Name:</label><br>
             <input type="text" id="lname" name="last_name"><br>
-        
+            
             <label for="password">New Password:</label><br>
             <input type="password" id="password" name="password"><br>
-        
+            
             <input type="button" value="Update" onclick="updateUserInfo()">
+            <button id="profile-btn">Back</button>
         </form>
+        
     </div>
 
-    <!-- back button to home page -->
-    <div id = "back-btn">
-        <img src="../static/images/lighthouse-svgrepo-com.svg" alt="back button">
-    </div>
+    <script>
+        document.getElementById("profile-btn").addEventListener("click", function() {
+            console.log("CLICKED PROFILE BUTTON")
+            window.location.href='/profile';
+        });
+    </script>
+
     <script>
     document.getElementById("back-btn").addEventListener("click", function() {
         window.location.href= '/homepage';

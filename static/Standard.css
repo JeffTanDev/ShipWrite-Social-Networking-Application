@@ -10,12 +10,15 @@
     --dark_blue: #32586b;
 }
 
-body {
-    background-color: var(--bg_white);
+html {
+    background-image: linear-gradient( var(--light_blue), var(--dark_blue), #001a20);
+    background-size: cover;
+    height: 100%;
+    width: 100%;
 }
 
 /* Reset some default styles */
-body, h1, p, button {
+body, h1, p, button, #back-btn {
     justify-content: center;
     align-content: center;
     margin: 0;
@@ -44,8 +47,9 @@ body, h1, p, button {
     transition: 1s;
 }
 
-h1 {
+h1, h2 {
     font-family: 'Fondamento', cursive;
+    display: block;
 }
 
 hr {
@@ -76,6 +80,50 @@ input {
 }
 
 button:hover, button:focus {
+    background-color: var(--dark_blue);
+    color: var(--bg_white);
+    rotate: -3deg;
+    scale: 1.04;
+}
+
+#back-btn {
+    position: absolute;
+    margin: 2rem;
+    float: left;
+    left: 0px;
+    height: 5rem;
+    width: 5rem;
+    transition: 2s ease-in-out;
+    cursor: pointer;
+}
+
+
+#back-btn > img{
+    fill: var(--dark_blue);
+    height: 100%;
+    width: 100%;
+}
+
+#back-btn:hover {
+    transform: rotate(360deg);
+}
+
+input[type=button] {
+    width: unset;
+    display: inline;
+    background-color: var(--bg_white);
+    color: var(--dark_blue);
+    padding: 0.3rem;
+    font-size: 1.3rem;
+    margin: 0.4rem;
+    border-radius: 0.3rem;
+    transition: 250ms;
+    cursor: pointer;
+    box-shadow: var(--dark_blue) 2px 2px 2px;
+    border: 2px solid var(--dark_blue);
+}
+
+input[type=button]:hover, input[type=button]:focus{
     background-color: var(--dark_blue);
     color: var(--bg_white);
     rotate: -3deg;

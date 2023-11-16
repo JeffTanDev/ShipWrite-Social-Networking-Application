@@ -20,6 +20,7 @@
                 <textarea id="message-textbox" placeholder="Enter your message in the bottle..."></textarea>
             </div>
             <div class="ui-block-bottom">
+                <button id="done-button">Done</button>
                 <!-- Buttons -->
                 <div class="button-container">
                     <button id="get-button">Get</button>
@@ -35,40 +36,15 @@
             </div>
     </main>
     <div id = "back-btn">
-        <img src="../static/images/lighthouse-svgrepo-com.svg" alt="back button">
+        <img src="../static/images/icons8-ship-wheel-50.png" alt="back button">
     </div>
     <div id="shoreline">
-    </div>
-
-    <div class="modal fade" id="bottleModal" tabindex="-1" role="dialog" aria-labelledby="bottleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="bottleModalLabel">Bottle Message</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Show Message -->
-                    <p id="bottleMessage"></p>
-                    <!-- Reply TextArea -->
-                    <textarea id="reply-textbox" class="form-control" placeholder="Enter your reply here..."></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="reply-button">Reply</button>
-                </div>
-            </div>
-        </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="../static/Interceptor.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
 <script>
+
     document.getElementById("get-button").addEventListener("click", function () {
         axios({
             url: '/api/bottlemessages',
@@ -76,59 +52,43 @@
         }).then(result => {
             console.log(result.data);
             let message_content = result.data.message_content;
-            let message_id = result.data.message_ID;
-            let bottle = createBottle(message_content, message_id);
-            document.getElementById("shoreline").prepend(bottle);
+            let bottle = createBottle(message_content);
+            shoreline.prepend(bottle);
         }).catch(error => {
-            console.error("Error fetching message: ", error.response.data.error);
-            let bottle = createBottle("The note is blank...", null);
-            document.getElementById("shoreline").appendChild(bottle);
+            console.error("Error fetching message: ", error);
+            let bottle = createBottle("The note is blank...");
+            shoreline.appendChild(bottle);
         });
     });
 
-    function createBottle(message, messageID) {
+    document.onkeydown = function(e) {
+        e = e || window.event;
+        if (e.key === "Escape" || e.key === "Esc") {
+            toggleoverlay(false)
+        }
+    }
+
+    function createBottle(message) {
         var bottle = document.createElement("div");
         bottle.classList.add("bottle");
         bottle.innerHTML = "<img src=\"../static/images/bottle.png\" alt=\"bottle\" class=\"bottle-icon\">";
 
         bottle.addEventListener("click", function() {
             console.log("Bottle clicked with message: ", message);
-
-            // show message in the modal, and record messageID
-            document.getElementById("bottleMessage").innerText = message;
-            document.getElementById("reply-button").setAttribute("data-message-id", messageID);
-
-            // show modal
-            $('#bottleModal').modal('show');
+            displaybottle("main-note", message); 
+            toggleoverlay(true);
             bottle.remove();
         });
         return bottle;
     }
 
-    // Set Reply button
-    document.getElementById("reply-button").addEventListener("click", function() {
-        var replyMessage = document.getElementById("reply-textbox").value;
-        var messageID = this.getAttribute("data-message-id");
+    function displaybottle(elementId, message) {
+        var bottleBox = document.getElementById(elementId);
+        bottleBox.innerText = message;
+    }
 
-        // post request
-        if (messageID) {
-            axios.post('/api/bottlemessage/' + messageID + '/addreply', {
-                content: replyMessage
-            }).then(response => {
-                console.log(response.data);
-                // show reply success
-                displayMessage("drop-message-display", "Message reply successfully!", "success");
-            }).catch(error => {
-                console.error("Error sending reply: ", error.response.data.error);
-                // show reply wrong
-                displayMessage("drop-message-display", `${error.response.data.error}`, "error");
-            });
-        }
-
-        // close modal
-        $('#bottleModal').modal('hide');
-    });
-
+</script>
+<script>
     document.getElementById("drop-button").addEventListener("click", function() {
         var messageContent = document.getElementById("message-textbox").value;
         axios.post('/api/bottlemessages/send', {
@@ -137,8 +97,8 @@
             console.log(response.data);
             displayMessage("drop-message-display", "Message dropped successfully!", "success");
         }).catch(error => {
-            console.error("Error sending message: ", error.response.data.error);
-            displayMessage("drop-message-display", `${error.response.data.error}`, "error");
+            console.error("Error sending message: ", error);
+            displayMessage("drop-message-display", "Failed to drop the message.", "error");
         });
     });
 
@@ -150,14 +110,18 @@
         setTimeout(function() { messageBox.style.display = "none"; }, 1500);
     }
 
+    function toggleoverlay(on) {
+        var overlay = document.getElementsByClassName("overlay");
+        for (var i = 0; i < overlay.length; i++) {
+            overlay[i].style.opacity = on ? '1.0' : '0.0';
+            overlay[i].style.pointerEvents = on ? 'all' :'none';
+        }
+    }
 </script>
 
 <script>
     document.getElementById("back-btn").addEventListener("click", function() {
             window.location.href= '/homepage';
-    });
-    document.getElementById("dropped-bottles-button").addEventListener("click", function() {
-        window.location.href = '/bottlehistory';
     });
 </script>
 
