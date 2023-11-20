@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <!-- jQuery, bottstrap, axios -->
+    <!-- jQuery, bootstrap, axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../static/Interceptor.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -64,6 +64,18 @@
         });
     }
 
+    function requestFriend(replyID) {
+        axios.post('/api/request_friend', {
+            replyID: replyID
+        }).then(response => {
+            console.log(response.data.message);
+            alert("Friend request sent!");
+        }).catch(error => {
+            console.error("Error sending friend request: ", error.response.data.error);
+            alert("Failed to send friend request.");
+        });
+    }
+
     // display reply
     function showReplies(messageID) {
         axios.post('/api/bottlemessage/' + messageID + '/replies', {
@@ -84,8 +96,7 @@
                     friendButton.className = 'btn btn-primary'; // Bootstrap button class
                     friendButton.innerText = 'Request Friend';
                     friendButton.onclick = function() {
-                        // Add your logic for friend request here
-                        console.log('Friend request sent for reply:', reply.reply_content);
+                        requestFriend(reply.replyID);
                     };
                     modalBody.appendChild(friendButton);
                 });

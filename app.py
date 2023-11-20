@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 from datetime import datetime
 import threading
 
-
 # will eventually help connect the different pages
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 app = Flask(__name__)
@@ -67,6 +66,12 @@ def bottlehistory(name=None):
     return render_template('BottleHistory.html', name=name)
 
 
+@app.route('/message')
+# Opens the Message page
+def message(name=None):
+    return render_template('Message.html', name=name)
+
+
 @app.route('/api/token/refresh', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh():
@@ -101,7 +106,8 @@ def update_user_info():
     data = request.get_json()
 
     # update dictionary
-    fields_to_update = {k: v for k, v in data.items() if k in ["first_name", "last_name", "email", "phone", "password"] and v != ''}
+    fields_to_update = {k: v for k, v in data.items() if
+                        k in ["first_name", "last_name", "email", "phone", "password"] and v != ''}
     if not fields_to_update:
         return jsonify({"error": "No valid fields provided for update"}), 400
 
@@ -221,8 +227,10 @@ def get_bottle_message():
         message_id = message['ocean_messageID']
 
         def perform_inserts():
-            database.insert_into_db('viewed_ocean_messages', {'ocean_messageID': message_id, 'user_ID': current_userID, 'time_viewed': datetime.utcnow()})
+            database.insert_into_db('viewed_ocean_messages', {'ocean_messageID': message_id, 'user_ID': current_userID,
+                                                              'time_viewed': datetime.utcnow()})
             database.update_times_viewed(message_id)
+
         insert_thread = threading.Thread(target=perform_inserts)
         insert_thread.start()
 
@@ -247,11 +255,11 @@ def get_dropped_bottles():
     # Get up to 10 bottles dropped by the user
     # cut_off_time is in place so that if the user has 10+ messages we load the first ten and then
     # if it is requested to load more hit the route again but set the cut_off_time to be that of the oldest curently held message
-    dropped_bottles = database.read_from_db('ocean_messages', 
-                                              {'fields': ['ocean_messageID', 'time_sent', 'message_content'], 
-                                               'formatting': 
-                                               f"WHERE user_ID = {current_userID} AND time_sent <'{cut_off_time}' ORDER BY time_sent DESC LIMIT 10"})
-    
+    dropped_bottles = database.read_from_db('ocean_messages',
+                                            {'fields': ['ocean_messageID', 'time_sent', 'message_content'],
+                                             'formatting':
+                                                 f"WHERE user_ID = {current_userID} AND time_sent <'{cut_off_time}' ORDER BY time_sent DESC LIMIT 10"})
+
     if dropped_bottles or dropped_bottles == []:
         return jsonify({"dropped_bottles": dropped_bottles}), 200
     else:
@@ -263,12 +271,13 @@ def get_dropped_bottles():
 def add_bottle_reply(messageID):
     current_userID = get_jwt_identity()
     data = request.get_json()
-    
+
     if data['content'] == None or data['content'] == '':
         return jsonify({"message": "There was an error adding the reply, please don't submit blank responses."}), 400
 
-    reply_inserted = database.insert_into_db('ocean_message_replies', 
-                                             {'ocean_messageID': messageID, 'user_ID': current_userID, 'reply_content': data['content'], 'time_added': datetime.utcnow()})
+    reply_inserted = database.insert_into_db('ocean_message_replies',
+                                             {'ocean_messageID': messageID, 'user_ID': current_userID,
+                                              'reply_content': data['content'], 'time_added': datetime.utcnow()})
 
     if reply_inserted:
         return jsonify({"message": "Reply added sucessfully!"}), 200
@@ -289,15 +298,26 @@ def view_bottle_replies(messageID):
     # Get up to 10 replies on a particular bottle
     # cut_off_time is in place so that if the bottle has 10+ replies we load the first ten and then
     # if it is requested to load more hit the route again but set the cut_off_time to be that of the oldest curently held message
-    bottle_replies = database.read_from_db('ocean_message_replies', 
-                                              {'fields': ['replyID', 'user_ID', 'reply_content', 'time_added'], 
-                                               'formatting': 
-                                               f"WHERE ocean_messageID = {messageID} AND time_added <'{cut_off_time}' ORDER BY time_added DESC LIMIT 10"})
+    bottle_replies = database.read_from_db('ocean_message_replies',
+                                           {'fields': ['replyID', 'user_ID', 'reply_content', 'time_added'],
+                                            'formatting':
+                                                f"WHERE ocean_messageID = {messageID} AND time_added <'{cut_off_time}' ORDER BY time_added DESC LIMIT 10"})
 
     if bottle_replies:
         return jsonify({"bottle_replies": bottle_replies}), 200
     else:
         return jsonify({"error": "No replies so far!"}), 400
+
+
+@app.route('/api/request_friend', method=['POST'])
+def request_friend():
+    data = request.get_json()
+    userID1 = data['replyID']
+    userID2 = get_jwt_identity()
+    if usermanager.create_friendship(userID1, userID2):
+        return jsonify({"message": "Friendship Pending"}), 200
+    else:
+        return jsonify({"error": "Unsccessful"}), 400
 
 
 if __name__ == '__main__':

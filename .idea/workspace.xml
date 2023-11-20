@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="864d7fe1-ca12-44e5-bfd3-14c6732832ca" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/BottleHistory.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/BottleHistory.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Edition.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Edition.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Ocean.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Ocean.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +114,11 @@
       <workItem from="1699941073461" duration="601000" />
       <workItem from="1699984786959" duration="2625000" />
       <workItem from="1700028301880" duration="1238000" />
-      <workItem from="1700071654723" duration="2294000" />
+      <workItem from="1700071654723" duration="4449000" />
+      <workItem from="1700092835796" duration="1230000" />
+      <workItem from="1700118042721" duration="1256000" />
+      <workItem from="1700160849959" duration="1344000" />
+      <workItem from="1700505872997" duration="1753000" />
     </task>
     <servers />
   </component>
@@ -123,7 +126,7 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/app_py$app.coverage" NAME="app Coverage Results" MODIFIED="1700073547777" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/app_py$app.coverage" NAME="app Coverage Results" MODIFIED="1700162019284" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ShipWrite$app.coverage" NAME="app Coverage Results" MODIFIED="1698137212242" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
