@@ -7,7 +7,6 @@ from database import DataBase
 from usermanager import UserManager
 from decouple import config
 from datetime import datetime, timedelta
-from datetime import datetime
 import threading
 
 # will eventually help connect the different pages
@@ -309,7 +308,8 @@ def view_bottle_replies(messageID):
         return jsonify({"error": "No replies so far!"}), 400
 
 
-@app.route('/api/request_friend', method=['POST'])
+@app.route('/api/request_friend', methods=['POST'])
+@jwt_required()
 def request_friend():
     data = request.get_json()
     userID1 = data['replyID']

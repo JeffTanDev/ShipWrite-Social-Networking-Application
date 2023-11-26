@@ -160,3 +160,21 @@ class DataBase:
         # Normalize vector of weights to equal 1.0 (probability should add up to one)
         norm_bottle_weights = [w / weight_total for w in raw_bottle_weights]
         return random.choices(ocean_bottles, norm_bottle_weights, k=1)[0]
+    
+
+    def get_pending_friends(self, userID: int) -> dict:
+        try:
+            added_by_user = self._execute_db_read(f'SELECT fr.user2_ID, fr.creation_date, ui.first_name FROM friendship fr JOIN user_info ui ON fr.user2_ID = ui.user_ID WHERE user1_ID = {userID} and status = "PENDING"')
+            added_user = self._execute_db_read(f'SELECT fr.user1_ID, fr.creation_date, ui.first_name FROM friendship fr JOIN user_info ui ON fr.user1_ID = ui.user_ID WHERE user2_ID = {userID} and status = "PENDING"')
+            result = {'user_added': added_by_user, 'added_user': added_user}
+            return result
+        except mysql.connector.Error as e:
+            return None
+    
+    def get_all_friends(self, userID: int) -> dict:
+        try:
+            user_friend_query = f"SELECT fr.creation_date, ui.first_name, ui.last_name FROM friendship fr JOIN user_info ui ON ui.user_ID = fr.user2_ID WHERE user1_ID={userID} AND fr.status = 'ACCEPTED'"
+            user_friends = self._execute_db_read(user_friend_query)
+            return user_friends
+        except mysql.connector.Error as e:
+            return None

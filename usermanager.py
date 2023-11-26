@@ -199,3 +199,38 @@ class UserManager():
             return False
         
         return self.database.delete_friendship(userID, friendID)
+    
+    def get_pending_friend_requests(self, userID: int) -> dict:
+        """
+        Get friend requests towards or from a user
+
+        Args:
+            userID (int): ID of person who requested/got requested
+
+        Returns:
+            dict or None: if there was an error returns None else returns a dict of the form
+            {'user_added': [{'user1_ID': num, 'creation_date': datetime, 'first_name': name}, {} ...], 'added_user': [{'user2_ID': num, 'creation_date': datetime, 'first_name': name}, {}]}
+            
+            Note**: The user IDs in the return dicts are the ID of the other person. So in the user_added, the ids represent who the user added and is still waiting to accept. In the added user the ID represents who requested to add the user and is waiting.
+        """
+
+        if not userID:
+            return None
+        
+        return self.database.get_pending_friends(userID)
+    
+    def get_all_friends(self, userID: int) -> list:
+        """
+        Get friends of a user
+
+        Args:
+            userID (int): ID of person wanting to see their friends
+
+        Returns:
+            list or None: If there was an error None, else a list of the form [{'creation_date': datetime, 'first_name': name, 'last_name': name}]
+        """        
+
+        if not userID: 
+            return None
+        
+        return self.database.get_all_friends(userID)
