@@ -209,9 +209,9 @@ class UserManager():
 
         Returns:
             dict or None: if there was an error returns None else returns a dict of the form
-            {'user_added': [{'user1_ID': num, 'creation_date': datetime, 'first_name': name}, {} ...], 'added_user': [{'user2_ID': num, 'creation_date': datetime, 'first_name': name}, {}]}
+            {'user_added': [{'user2_ID': num, 'creation_date': datetime, 'first_name': name}, {} ...], 'added_user': [{'user1_ID': num, 'creation_date': datetime, 'first_name': name}, {}]}
             
-            Note**: The user IDs in the return dicts are the ID of the other person. So in the user_added, the ids represent who the user added and is still waiting to accept. In the added user the ID represents who requested to add the user and is waiting.
+            Note**: The user IDs in the return dicts are the ID of the other person. So in the user_added, the ids represent who the user added and is still waiting on to accept. In the added_user the ID represents who requested to add the user and is waiting.
         """
 
         if not userID:

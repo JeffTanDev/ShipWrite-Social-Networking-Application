@@ -320,5 +320,27 @@ def request_friend():
         return jsonify({"error": "Unsccessful"}), 400
 
 
+@app.route('/api/get_friends', methods=['GET'])
+@jwt_required()
+def request_friend():
+    user_id = get_jwt_identity()
+    friends = usermanager.get_all_friends(user_id)
+    if friends != None:
+        return jsonify({'friends': friends}), 200
+    else:
+        return jsonify({"error": "Something went wrong looking for your friends, try again later."}), 400
+
+
+@app.route('/api/get_friend_requests', methods=['GET'])
+@jwt_required()
+def request_friend():
+    user_id = get_jwt_identity()
+    friends = usermanager.get_pending_friend_requests(user_id)
+    if friends != None:
+        return jsonify(friends), 200
+    else:
+        return jsonify({"error": "Something went wrong looking for your friend requests, try again later."}), 400
+    
+
 if __name__ == '__main__':
     app.run()

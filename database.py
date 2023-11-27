@@ -178,3 +178,4 @@ class DataBase:
             return user_friends
         except mysql.connector.Error as e:
             return None
+
