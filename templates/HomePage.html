@@ -10,6 +10,7 @@
     <h1>Home Page</h1>
     <div class="toolbar">
         <button id="mode-button">Mode</button>
+        <button id="logout">logout</button>
         <button class="profile-button" id="profile-b">Profile</button>
     </div>
     <div class="button-container">
@@ -24,6 +25,11 @@
          })
          document.getElementById("ocean-button").addEventListener("click", function() {
             window.location.href = '/ocean';
+         })
+         document.getElementById("logout").addEventListener("click", function() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = '/';
          })
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
