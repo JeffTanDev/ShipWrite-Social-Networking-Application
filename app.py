@@ -322,7 +322,7 @@ def request_friend():
 
 @app.route('/api/get_friends', methods=['GET'])
 @jwt_required()
-def request_friend():
+def get_friends():
     user_id = get_jwt_identity()
     friends = usermanager.get_all_friends(user_id)
     if friends != None:
@@ -333,7 +333,7 @@ def request_friend():
 
 @app.route('/api/get_friend_requests', methods=['GET'])
 @jwt_required()
-def request_friend():
+def get_friend_requests():
     user_id = get_jwt_identity()
     friends = usermanager.get_pending_friend_requests(user_id)
     if friends != None:
