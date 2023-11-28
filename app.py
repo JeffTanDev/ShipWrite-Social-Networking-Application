@@ -351,7 +351,7 @@ def accept_friend_request():
     other_person = data['person_accepted_ID']
     
     if usermanager.accept_friend_request(user_id, other_person):
-        return jsonify({}), 200
+        return jsonify({"message": "Friendship connected successfully"}), 200
     else:
         return jsonify({"error": "Something went wrong accepting your request, try again later."}), 400
 
@@ -364,7 +364,7 @@ def decline_friend_request():
     other_person = data['person_declined_ID']
     
     if usermanager.decline_friend_request(user_id, other_person):
-        return jsonify({}), 200
+        return jsonify({"message": "Friendship decline successfully"}), 200
     else:
         return jsonify({"error": "Something went wrong declining your request, try again later."}), 400
     

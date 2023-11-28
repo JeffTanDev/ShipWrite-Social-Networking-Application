@@ -37,12 +37,36 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="../static/Interceptor.js"></script>
 <script>
-     function agree(){
-
+     function agree(ID){
+        console.log(ID);
+        axios({
+            url: '/api/accept_request',
+            method: 'POST',
+            data: {
+                person_accepted_ID: ID
+            }
+        }).then(result => {
+            alert(result.data.message);
+            location.reload();
+        }).catch(error => {
+            alert(`${error.response.data.error}`);
+        });
     }
 
-    function reject(){
-
+    function reject(ID){
+        console.log(ID);
+        axios({
+            url: '/api/decline_request',
+            method: 'POST',
+            data: {
+                person_declined_ID: ID
+            }
+        }).then(result => {
+            alert(result.data.message);
+            location.reload();
+        }).catch(error => {
+            alert(`${error.response.data.error}`);
+        });
     }
 
     window.onload = function(){
@@ -52,11 +76,11 @@
         }).then(result => {
             const friends = result.data.friends;
             const table = document.getElementById('friends-table');
-            
+            console.log(friends)
             friends.forEach(friend => {
                 let row = table.insertRow();
                 row.innerHTML = `<td>${friend.username}</td>`;
-                console.log(row)
+                //console.log(row)
             });
         }).catch(error => {
             alert(`${error.response.data.error}`);
@@ -69,15 +93,16 @@
             const friends = result.data.added_user;
             const waiting_friends = result.data.user_added;
             console.log(friends)
+            console.log(waiting_friends)
             const table = document.getElementById('request-table');
             const other_table = document.getElementById('friends-table')
             
             friends.forEach(friend => {
                 let row = table.insertRow();
                 row.innerHTML = `<td>${friend.username}</td>
-                <td><a href="#" onclick="agree()">Agree</a> | <a href="#" onclick="reject()">Reject</a></td>
+                <td><a href="#" onclick="agree(${friend.user2_ID})">Agree</a> | <a href="#" onclick="reject(${friend.user2_ID})">Reject</a></td>
                 `;
-                console.log(row)
+                //console.log(row)
             });
 
             waiting_friends.forEach(friend => {
