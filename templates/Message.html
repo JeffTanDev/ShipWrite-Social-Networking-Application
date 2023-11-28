@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message</title>
+    <link rel="stylesheet" type="text/css" href="../static/Message.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-sidebar">
+            Friends
+            <table>
+                <tr>
+                    <th>Name</th>
+                </tr>
+                <tbody id="friends-table">
+                    <!-- Dynamically generated employee rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="main-content">
+            Request Friends
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Operation</th>
+                </tr>
+                <tbody id="request-table">
+                    <!-- Dynamically generated employee rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="right-sidebar">
+            ChatBox
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="../static/Interceptor.js"></script>
+<script>
+     function agree(){
+
+    }
+
+    function reject(){
+
+    }
+
+    window.onload = function(){
+        axios({
+            url: '/api/get_friends',
+            method: 'GET',
+        }).then(result => {
+            const friends = result.data.friends;
+            const table = document.getElementById('friends-table');
+            
+            friends.forEach(friend => {
+                let row = table.insertRow();
+                row.innerHTML = `<td>${friend.username}</td>`;
+                console.log(row)
+            });
+        }).catch(error => {
+            alert(`${error.response.data.error}`);
+        });
+
+        axios({
+            url: '/api/get_friend_requests',
+            method: 'GET',
+        }).then(result => {
+            const friends = result.data.user_added;
+            console.log(friends)
+            const table = document.getElementById('request-table');
+            
+            friends.forEach(friend => {
+                let row = table.insertRow();
+                row.innerHTML = `<td>${friend.username}</td>
+                <td><a href="#" onclick="agree()">Agree</a> | <a href="#" onclick="reject()">Reject</a></td>
+                `;
+                console.log(row)
+            });
+        }).catch(error => {
+            alert(`${error.response.data.error}`);
+        });
+    }
+</script>
+</html>

@@ -14,7 +14,7 @@
         <button class="profile-button" id="profile-b">Profile</button>
     </div>
     <div class="button-container">
-        <button class="message-button">Message</button>
+        <button id="message-button">Message</button>
         <button id="ocean-button">Ocean</button>
         <a href="./Team.html"><button class="group-button">Group</button></a>
     </div>
@@ -25,6 +25,9 @@
          })
          document.getElementById("ocean-button").addEventListener("click", function() {
             window.location.href = '/ocean';
+         })
+         document.getElementById("message-button").addEventListener("click", function() {
+            window.location.href = '/message';
          })
          document.getElementById("logout").addEventListener("click", function() {
             localStorage.removeItem('access_token');
