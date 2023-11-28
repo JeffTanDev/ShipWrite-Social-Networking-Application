@@ -161,7 +161,7 @@ class UserManager():
         if not userID or not friendID or userID == friendID:
             return False
         
-        accept_friendship_query = f'DELETE FROM friendship WHERE user1_ID={userID} OR user1_ID={friendID} AND user2_ID={friendID} or user2_ID={userID}'
+        accept_friendship_query = f'DELETE FROM friendship WHERE (user1_ID={userID} AND user2_ID={friendID}) OR (user1_ID={friendID} AND user2_ID={userID})'
         return self.database._execute_db_modification(accept_friendship_query)
 
 
