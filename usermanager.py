@@ -164,8 +164,8 @@ class UserManager():
         if not userID or not friendID or userID == friendID:
             return False
         
-        accept_friendship_query = f'DELETE FROM friendship WHERE (user1_ID={userID} AND user2_ID={friendID}) OR (user1_ID={friendID} AND user2_ID={userID})'
-        return self.database._execute_db_modification(accept_friendship_query)
+        delete_friendship_query = f'DELETE FROM friendship WHERE (user1_ID={userID} AND user2_ID={friendID}) OR (user1_ID={friendID} AND user2_ID={userID})'
+        return self.database._execute_db_modification(delete_friendship_query)
 
 
     def accept_friend_request(self, userID: int, friendID: int) -> bool:
@@ -201,7 +201,7 @@ class UserManager():
         if not userID or not friendID or userID == friendID:
             return False
         
-        return self.database.delete_friendship(userID, friendID)
+        return self.delete_friendship(userID, friendID)
     
     def get_pending_friend_requests(self, userID: int) -> dict:
         """
