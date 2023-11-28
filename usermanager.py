@@ -140,6 +140,9 @@ class UserManager():
         if not requesterID or not recieverID or requesterID == recieverID:
             return False
         
+        if len(self.database._execute_db_read(f'SELECT * FROM friendship WHERE user1_ID={requesterID} AND user2_ID={recieverID}')) > 0:
+            return True
+        
         new_friendship_query = 'INSERT into friendship(user1_ID, user2_ID, status, creation_date) VALUES(%s, %s, %s, %s), (%s, %s, %s, %s)'
         # A->B friendship row ends with timestamp, then B->A friendship
         values = [requesterID, recieverID, "ACCEPTED", datetime.utcnow(), recieverID, requesterID, "PENDING", datetime.utcnow()]

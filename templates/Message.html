@@ -18,7 +18,7 @@
             </table>
         </div>
         <div class="main-content">
-            Request Friends
+            Friend Requests
             <table>
                 <tr>
                     <th>Name</th>
@@ -66,9 +66,11 @@
             url: '/api/get_friend_requests',
             method: 'GET',
         }).then(result => {
-            const friends = result.data.user_added;
+            const friends = result.data.added_user;
+            const waiting_friends = result.data.user_added;
             console.log(friends)
             const table = document.getElementById('request-table');
+            const other_table = document.getElementById('friends-table')
             
             friends.forEach(friend => {
                 let row = table.insertRow();
@@ -76,6 +78,11 @@
                 <td><a href="#" onclick="agree()">Agree</a> | <a href="#" onclick="reject()">Reject</a></td>
                 `;
                 console.log(row)
+            });
+
+            waiting_friends.forEach(friend => {
+                let row = other_table.insertRow();
+                row.innerHTML = `<td>${friend.username} (Pending)</td>`;
             });
         }).catch(error => {
             alert(`${error.response.data.error}`);

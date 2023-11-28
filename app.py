@@ -336,10 +336,37 @@ def get_friends():
 def get_friend_requests():
     user_id = get_jwt_identity()
     friends = usermanager.get_pending_friend_requests(user_id)
+    
     if friends != None:
         return jsonify(friends), 200
     else:
         return jsonify({"error": "Something went wrong looking for your friend requests, try again later."}), 400
+    
+
+@app.route('/api/accept_request', methods=['POST'])
+@jwt_required()
+def accept_friend_request():
+    user_id = get_jwt_identity()
+    data = request.json
+    other_person = data['person_accepted_ID']
+    
+    if usermanager.accept_friend_request(user_id, other_person):
+        return jsonify({}), 200
+    else:
+        return jsonify({"error": "Something went wrong accepting your request, try again later."}), 400
+
+
+@app.route('/api/decline_request', methods=['POST'])
+@jwt_required()
+def decline_friend_request():
+    user_id = get_jwt_identity()
+    data = request.json
+    other_person = data['person_declined_ID']
+    
+    if usermanager.decline_friend_request(user_id, other_person):
+        return jsonify({}), 200
+    else:
+        return jsonify({"error": "Something went wrong declining your request, try again later."}), 400
     
 
 if __name__ == '__main__':
