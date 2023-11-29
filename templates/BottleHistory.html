@@ -5,18 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/BottleHistory.css">
-    <title>Document</title>
+    <title>Bottle History</title>
 </head>
 <body>
     <!-- back button to home page -->
     <div class="top-bar">
         <div id="back-btn">
-            <img src="../static/images/lighthouse-svgrepo-com.svg" alt="back button">
+            <img src="../static/images/wheel.png" alt="back button">
         </div>
     </div>
 
-    <h2>Bottles you have dropped to the Ocean:</h2>
-    <br><br>
+    <h2>Bottles you sent out to sea:</h2>
     <div id="bottles-container">
         <!-- bottle message will display here -->
     </div>
@@ -63,12 +62,11 @@
     function displayBottles(bottles) {
         const container = document.getElementById("bottles-container");
         bottles.forEach(bottle => {
-            const bottleBtn = document.createElement("button");
+            const bottleBtn = document.createElement("div");
             bottleBtn.className = "bottle-btn";
             bottleBtn.innerText = bottle.message_content;
             bottleBtn.onclick = () => showReplies(bottle.ocean_messageID);
             container.appendChild(bottleBtn);
-            container.appendChild(document.createElement("br"));
         });
     }
 
@@ -124,7 +122,7 @@
 </script>
 <script>
     document.getElementById("back-btn").addEventListener("click", function() {
-        window.location.href= '/homepage';
+        window.location.href= '/ocean';
     });
 </script>
 </html>

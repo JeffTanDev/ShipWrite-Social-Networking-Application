@@ -1,4 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Macondo&family=Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fondamento&display=swap');
+
+:root {
+    --bg_white: #f3f6f2;
+    --light_blue: #b2d1d6;
+    --paper: #e0dcc9;
+    --red: #cb3032;
+    --dark_blue: #32586b;
+}
 
 /* Reset some default styles */
 body, h1, p, button {
@@ -52,24 +62,39 @@ header {
 
 /* Style the button container */
 .button-container {
+    margin-left: 2rem;
     display: inline-block;
     padding-right: 3%;
 }
 
 button {
-    background-color: #0077cc;
-    color: white;
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
+    display: inline;
+    background-color: var(--bg_white);
+    color: var(--dark_blue);
+    padding: 0.3rem;
+    font-size: 1.3rem;
+    margin: 0.4rem;
+    border-radius: 0.3rem;
+    transition: 250ms;
     cursor: pointer;
+    box-shadow: var(--dark_blue) 2px 2px 2px;
+    border: 2px solid var(--dark_blue);
 }
 
-/* Style the message display and dropped bottles history */
-.ui-block,
-.dropped-bottles-history {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
+input {
+    background-color: var(--bg_white);
+    border: none;
+    font-size: 1.1rem;
+    width: 100%;
+    border-radius: 0.3rem;
+    padding-left: 0.5rem;
+}
+
+button:hover {
+    background-color: var(--dark_blue);
+    color: var(--bg_white);
+    rotate: -3deg;
+    scale: 1.04;
 }
 
 .message-display {
@@ -136,6 +161,19 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 5px;
     resize: none;
+}
+
+#message-textbox {
+    display: inline;
+    background-color: #FFFFFF60;
+    color: black;
+    padding: 0.3rem;
+    font-size: 1.3rem;
+    margin: 0.4rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    box-shadow: var(--dark_blue) 2px 2px 2px;
+    border: 2px solid var(--dark_blue);
 }
 
 /* Style the "Done" button within the message display */
