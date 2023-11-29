@@ -151,11 +151,11 @@ def create_account():
 
     # Check if the username or password is missing
     if not data['username'] or not data['password']:
-        return jsonify({"Error": "Missing username or password"}), 400
+        return jsonify({"error": "Missing username or password"}), 400
 
     # Check if the username already exists
     if usermanager.check_username(data['username']):
-        return jsonify({"Error": "Username already taken"}), 400
+        return jsonify({"error": "Username already taken"}), 400
 
     # Create the new user account
     if usermanager.create_user(data):

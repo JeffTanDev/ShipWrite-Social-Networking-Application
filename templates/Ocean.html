@@ -136,6 +136,7 @@
         }).then(response => {
             console.log(response.data);
             displayMessage("drop-message-display", "Message dropped successfully!", "success");
+            document.getElementById("message-textbox").value = "";
         }).catch(error => {
             console.error("Error sending message: ", error.response.data.error);
             displayMessage("drop-message-display", `${error.response.data.error}`, "error");
