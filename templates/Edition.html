@@ -18,29 +18,11 @@
         .error {
             background-color: #cb3032; /* red */
         }
-        #back-btn {
-            position: absolute;
-            margin: 20px;
-            height: 5vh;
-            width: 5vh;
-            transition: 1.0s ease;
-            animation: bob 2.2s ease-in-out infinite alternate-reverse;
-            animation-play-state: paused;
-            transform-origin: center bottom;
-        }
-
-        #back-btn > img{
-            height: 5vh;
-        }
-
-        #back-btn:hover, #back-btn:focus {
-            cursor: pointer;
-            animation-play-state: running;
-        }
     </style>
     
 </head>
 <body>
+    
     <div class="main-card">
 
         <div id="messageBox" style="display:none;"></div>
@@ -72,7 +54,7 @@
 
     <!-- back button to home page -->
     <div id = "back-btn">
-        <img src="../static/images/lighthouse-svgrepo-com.svg" alt="back button">
+        <img src="../static/images/wheel.png" alt="back button">
     </div>
     <script>
     document.getElementById("back-btn").addEventListener("click", function() {

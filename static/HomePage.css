@@ -63,8 +63,8 @@ h1 {
 }
 
 /* Inward mode styles */
-.inward-mode .button-container .message-button,
-.inward-mode .button-container .group-button {
+.inward-mode .message-button,
+.inward-mode .group-button {
     background-color: #ccc;
     cursor: not-allowed;
 }

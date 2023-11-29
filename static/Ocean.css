@@ -199,32 +199,21 @@ textarea {
 
 #back-btn {
     position: absolute;
-    margin: 20px;
-    height: 5vh;
-    width: 5vh;
-    transition: 1.0s ease;
-    animation: bob 2.2s ease-in-out infinite alternate-reverse;
-    animation-play-state: paused;
-    transform-origin: center bottom;
-}
-
-#back-btn > img{
-    height: 5vh;
-}
-
-#back-btn:hover, #back-btn:focus {
+    margin: 2rem;
+    float: left;
+    left: 0px;
+    height: 4rem;
+    width: 4rem;
+    transition: 2s ease-in-out;
     cursor: pointer;
-    animation-play-state: running;
 }
-
-
-@keyframes bob {
-    0% {
-        transform: rotate(-4deg);
-    }
-    100% {
-        transform: rotate(4deg);
-    }
+#back-btn > img{
+    fill: var(--dark_blue);
+    height: 100%;
+    width: 100%;
+}
+#back-btn:hover {
+    transform: rotate(360deg);
 }
 
 .drop-reflection-area {

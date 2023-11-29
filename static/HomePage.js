@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     const modeButton = document.getElementById("mode-button");
-    const messageButton = document.querySelector(".message-button");
-    const groupButton = document.querySelector(".group-button");
+    const messageButton = document.getElementById("message-button");
+
+    console.log(messageButton)
 
     // Fetch mode from backend on page load
     fetchMode();
@@ -33,12 +34,10 @@ document.addEventListener("DOMContentLoaded", function () {
             // Switch to outward mode
             body.classList.remove("inward-mode");
             messageButton.disabled = false;
-            groupButton.disabled = false;
         } else {
             // Switch to inward mode
             body.classList.add("inward-mode");
             messageButton.disabled = true;
-            groupButton.disabled = true;
         }
     }
 
@@ -50,11 +49,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (mode === 0) {
                     document.body.classList.add("inward-mode");
                     messageButton.disabled = true;
-                    groupButton.disabled = true;
                 } else {
                     document.body.classList.remove("inward-mode");
                     messageButton.disabled = false;
-                    groupButton.disabled = false;
                 }
             })
             .catch(error => {
