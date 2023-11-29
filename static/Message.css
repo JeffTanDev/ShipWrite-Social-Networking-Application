@@ -1,4 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Macondo&family=Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fondamento&display=swap');
+
+:root {
+    --bg_white: #f3f6f2;
+    --light_blue: #b2d1d6;
+    --paper: #e0dcc9;
+    --red: #cb3032;
+    --dark_blue: #32586b;
+}
+
+* {
+    color: var(--dark_blue);
+    font-family: 'Sawarabi Mincho', serif;
+}
+
 body, html {
+    background-color: var(--bg_white);
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -14,46 +32,50 @@ body, html {
 }
 
 .left-sidebar {
-    background-color: #f4f4f4;
+    background-color: var(--paper);
     width: 20%;
+    border-radius: 20px;
+    margin-left: 1rem;
 }
 
 .main-content {
-    background-color: #fff;
+    background-color: var(--bg_white);
     width: 40%;
 }
 
 .right-sidebar {
-    background-color: #f4f4f4;
+    background-color: var(--paper);
     width: 40%;
+    border-radius: 20px;
+    margin-right: 1rem;
 }
 
 /* --------back button and top bar ----------------- */
 
 #back-btn {
-    margin: 20px;
-    height: 5vh;
-    width: 5vh;
-    transition: 1.0s ease;
-    animation: bob 2.2s ease-in-out infinite alternate-reverse;
-    animation-play-state: paused;
-    transform-origin: center bottom;
-}
-
-#back-btn > img{
-    height: 5vh;
-}
-
-#back-btn:hover, #back-btn:focus {
+    position: absolute;
+    margin: 2rem;
+    float: left;
+    left: 0px;
+    height: 2rem;
+    width: 2rem;
+    transition: 2s ease-in-out;
     cursor: pointer;
-    animation-play-state: running;
+}
+#back-btn > img{
+    fill: var(--dark_blue);
+    height: 100%;
+    width: 100%;
+}
+#back-btn:hover {
+    transform: rotate(360deg);
 }
 
 .top-bar {
     width: 100%;
-    height: 50px; 
+    height: 4rem; 
     display: flex;
     align-items: center;
     padding-left: 20px;
-    background-color: #f4f4f4; 
+    background-color: var(--bg_white);; 
 }
