@@ -4,10 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/BottleHistory.css">
     <title>Document</title>
 </head>
 <body>
-    <h1>Bottles you have dropped to the Ocean:</h1>
+    <!-- back button to home page -->
+    <div class="top-bar">
+        <div id="back-btn">
+            <img src="../static/images/lighthouse-svgrepo-com.svg" alt="back button">
+        </div>
+    </div>
+
+    <h2>Bottles you have dropped to the Ocean:</h2>
     <br><br>
     <div id="bottles-container">
         <!-- bottle message will display here -->
@@ -113,5 +121,10 @@
         });
     }
 
+</script>
+<script>
+    document.getElementById("back-btn").addEventListener("click", function() {
+        window.location.href= '/homepage';
+    });
 </script>
 </html>

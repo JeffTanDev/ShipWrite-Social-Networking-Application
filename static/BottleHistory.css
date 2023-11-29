@@ -1,35 +1,3 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.container {
-    display: flex;
-    min-height: 100vh;
-}
-
-.left-sidebar, .main-content, .right-sidebar {
-    padding: 20px;
-}
-
-.left-sidebar {
-    background-color: #f4f4f4;
-    width: 20%;
-}
-
-.main-content {
-    background-color: #fff;
-    width: 40%;
-}
-
-.right-sidebar {
-    background-color: #f4f4f4;
-    width: 40%;
-}
-
-/* --------back button and top bar ----------------- */
-
 #back-btn {
     margin: 20px;
     height: 5vh;

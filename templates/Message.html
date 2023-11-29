@@ -5,6 +5,13 @@
     <link rel="stylesheet" type="text/css" href="../static/Message.css">
 </head>
 <body>
+    <!-- back button to home page -->
+    <div class="top-bar">
+        <div id="back-btn">
+            <img src="../static/images/lighthouse-svgrepo-com.svg" alt="back button">
+        </div>
+    </div>
+    
     <div class="container">
         <div class="left-sidebar">
             Friends
@@ -33,7 +40,10 @@
             ChatBox
         </div>
     </div>
+
+    
 </body>
+
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="../static/Interceptor.js"></script>
 <script>
@@ -113,5 +123,10 @@
             alert(`${error.response.data.error}`);
         });
     }
+</script>
+<script>
+    document.getElementById("back-btn").addEventListener("click", function() {
+        window.location.href= '/homepage';
+    });
 </script>
 </html>
