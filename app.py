@@ -312,8 +312,8 @@ def view_bottle_replies(messageID):
 @jwt_required()
 def request_friend():
     data = request.get_json()
-    userID1 = data['replyID']
-    userID2 = get_jwt_identity()
+    userID1 = get_jwt_identity()
+    userID2 = data['replyID']
     if usermanager.create_friendship(userID1, userID2):
         return jsonify({"message": "Friendship Pending"}), 200
     else:
